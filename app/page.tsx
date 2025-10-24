@@ -1,5 +1,30 @@
 import Image from "next/image";
 
+const  { PrismaClient }  = require('../lib/generated/prisma')
+const prisma = new PrismaClient()
+
+async function main() {      //This function is purely to test out that DB queries work
+  await prisma.test.create({ //Can only do ths once, since email is a unique value, comment it after running the program once
+    data: {
+      name: 'Alice',
+      email: 'alice@gmail.com',
+    },
+  })
+
+  const allTestEntries = await prisma.test.findMany()
+  console.dir(allTestEntries, { depth: null })
+}
+
+main()
+  .then(async () => {
+    await prisma.$disconnect()
+  })
+  .catch(async (e) => {
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })
+
 export default function Home() {
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
