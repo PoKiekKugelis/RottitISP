@@ -17,7 +17,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-secondary/20 to-primary/20 dark:from-background dark:to-background flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br flex items-center justify-center px-4 from-secondary/20 to-primary/20">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <Link href="/" className="text-4xl font-bold text-primary hover:text-primary/80">
@@ -43,13 +43,10 @@ export default function Login() {
                   required
                 />
               </div>
-              
+
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
+                <div>
                   <Label htmlFor="password">Password</Label>
-                  <Link href="/forgot-password" className="text-sm text-primary hover:underline">
-                    Forgot password?
-                  </Link>
                 </div>
                 <Input
                   id="password"

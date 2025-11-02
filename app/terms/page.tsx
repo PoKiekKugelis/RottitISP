@@ -9,11 +9,11 @@ export const metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-secondary/20 to-primary/20">
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="mb-8">
-          <Link href="/">
-            <Button variant="ghost">← Back to Home</Button>
+          <Link href="/register">
+            <div className="hover:underline">← Back to Home</div>
           </Link>
         </div>
 
@@ -21,8 +21,8 @@ export default function TermsPage() {
           <CardHeader>
             <CardTitle className="text-3xl">Terms of Service</CardTitle>
           </CardHeader>
-          <CardContent className="prose prose-gray dark:prose-invert max-w-none">
-            <h2 className="">Parduodi savo sielą krč</h2>
+          <CardContent>
+            <h2>Parduodi savo sielą krč</h2>
           </CardContent>
         </Card>
       </div>

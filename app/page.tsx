@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import PostFeed from "@/components/PostFeed";
 import { prisma } from "@/lib/prisma";
+import SideBar from "@/components/SideBar";
 
 async function testDB() {
   // This function is purely to test out that DB queries work
@@ -26,6 +27,9 @@ export default function Home() {
         <div className="flex-1">
           <PostFeed />
         </div>
+        <aside className="w--80 hidden lg:block">
+          <SideBar />
+        </aside>
       </main>
     </div>
   );
