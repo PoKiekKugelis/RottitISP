@@ -10,10 +10,11 @@ export default function SideBar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const communities = [
-    { name: "programming", displayName: "Programming", members: 5234 },
-    { name: "gaming", displayName: "Gaming", members: 3421 },
-    { name: "cooking", displayName: "Cooking", members: 2156 },
-    { name: "fitness", displayName: "Fitness", members: 1892 },
+    { name: "programming", members: 5234 },
+    { name: "gaming", members: 3421 },
+    { name: "cooking", members: 2156 },
+    { name: "fitness", members: 1892 },
+    { name: "itsjoever", members: 42069 },
   ];
 
   const SidebarContent = () => (

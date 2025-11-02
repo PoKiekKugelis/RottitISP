@@ -1,7 +1,6 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowBigUp, ArrowBigDown, MessageSquare } from "lucide-react";
 import Link from "next/link";
@@ -30,11 +29,11 @@ export default function PostCard({
       <div className="flex gap-3">
         {/* Likes */}
         <div className="flex flex-col items-center gap-1">
-          <button className="text-muted-foreground hover:text-primary transition-colors">
+          <button className="text-muted-foreground hover:text-primary">
             <ArrowBigUp className="h-6 w-6 cursor-pointer" />
           </button>
           <span className="font-bold text-sm">{votes}</span>
-          <button className="text-muted-foreground hover:text-secondary transition-colors">
+          <button className="text-muted-foreground hover:text-primary">
             <ArrowBigDown className="h-6 w-6 cursor-pointer" />
           </button>
         </div>
@@ -43,12 +42,12 @@ export default function PostCard({
         <div className="flex-1">
           <Link href={`/rot/${community}`}>
             <Badge variant="outline" className="text-xs mb-1 hover:bg-background cursor-pointer">
-              r/{community}
+              rot/{community}
             </Badge>
           </Link>
 
           <Link
-            href={`/r/${community}/post/${id}`}
+            href={`/rot/${community}/post/${id}`}
             className="hover:underline"
           >
             <h2 className="text-lg font-semibold mb-1">
@@ -56,7 +55,7 @@ export default function PostCard({
             </h2>
           </Link>
 
-          <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+          <p className="text-sm text-muted-foreground mb-2">
             {content}
           </p>
 

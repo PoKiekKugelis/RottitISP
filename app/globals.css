@@ -67,28 +67,6 @@
   --ring: oklch(0.52 0.08 345);
 }
 
-.dark {
-  /* Custom dark mode purple palette */
-  --background: oklch(0.32 0.04 320); 
-  --foreground: oklch(0.95 0.01 320);
-  --card: oklch(0.38 0.05 315); 
-  --card-foreground: oklch(0.95 0.01 320);
-  --popover: oklch(0.38 0.05 315);
-  --popover-foreground: oklch(0.95 0.01 320);
-  --primary: oklch(0.63 0.06 335);
-  --primary-foreground: oklch(0.98 0.005 320);
-  --secondary: oklch(0.43 0.06 315); 
-  --secondary-foreground: oklch(0.95 0.01 320);
-  --muted: oklch(0.43 0.06 315);
-  --muted-foreground: oklch(0.75 0.04 320);
-  --accent: oklch(0.52 0.08 345);
-  --accent-foreground: oklch(0.98 0.005 320);
-  --destructive: oklch(0.65 0.20 25);
-  --border: oklch(0.48 0.06 315);
-  --input: oklch(0.48 0.06 315);
-  --ring: oklch(0.63 0.06 335);
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;

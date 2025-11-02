@@ -27,7 +27,7 @@ export default function Home() {
         <div className="flex-1">
           <PostFeed />
         </div>
-        <aside className="w--80 hidden lg:block">
+        <aside>
           <SideBar />
         </aside>
       </main>

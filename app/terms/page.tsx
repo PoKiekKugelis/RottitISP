@@ -1,11 +1,5 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-
-export const metadata = {
-  title: "Terms of Service - Rottit",
-  description: "Terms of Service for Rottit",
-};
 
 export default function TermsPage() {
   return (

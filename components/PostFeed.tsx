@@ -1,13 +1,18 @@
 import PostCard from "@/components/PostCard";
 
-export default function PostFeed() {
+interface PostFeedProps {
+  communityName?: string;
+}
 
-  const posts = [
+export default function PostFeed({ communityName }: PostFeedProps) {
+
+
+  const AllPosts = [
     {
       id: 1,
       title: "Labuka!",
       author: "admin",
-      community: "itsjoever",
+      community: "programming",
       votes: 420,
       comments: 69,
       content: "😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉"
@@ -19,13 +24,13 @@ export default function PostFeed() {
       community: "itsjoever",
       votes: 420,
       comments: 69,
-      content: "😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉"
+      content: "lolol😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉"
     },
     {
       id: 3,
       title: "Labuka!",
       author: "admin",
-      community: "itsjoever",
+      community: "gaming",
       votes: 420,
       comments: 69,
       content: "😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉"
@@ -34,7 +39,7 @@ export default function PostFeed() {
       id: 4,
       title: "Labuka!",
       author: "admin",
-      community: "itsjoever",
+      community: "cooking",
       votes: 420,
       comments: 69,
       content: "😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉"
@@ -43,7 +48,7 @@ export default function PostFeed() {
       id: 5,
       title: "Labuka!",
       author: "admin",
-      community: "itsjoever",
+      community: "fitness",
       votes: 420,
       comments: 69,
       content: "😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉"
@@ -58,6 +63,9 @@ export default function PostFeed() {
       content: "😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉"
     },
   ];
+  const posts = communityName
+    ? AllPosts.filter(post => post.community == communityName)
+    : AllPosts;
 
   return (
     <div className="space-y-4">
