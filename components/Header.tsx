@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import AvatarImg from "@/components/Avatar";
 
 export default function Header() {
   return (
@@ -26,6 +27,7 @@ export default function Header() {
           <Button asChild>
             <Link href="/register">Sign Up</Link>
           </Button>
+          <Link href="/profile"><AvatarImg/></Link>
         </div>
       </div>
     </header>
