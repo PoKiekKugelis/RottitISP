@@ -13,6 +13,10 @@ export default function Profile() {
   const [karmaPoints, setKarmaPoints] = useState(1000);
   const [bio, setBio] = useState("Ay, Im walking 'ere");
 
+  const imageSrc = "https://github.com/shadcn.png";
+  const imageAlt = "@shadcn";
+  const imageFallBack = "CN";
+
   return (
     <div className="min-h-screen bg-gradient-to-br flex items-center justify-center px-4 from-secondary/20 to-primary/20">
       <div className="max-w-md w-full">
@@ -26,7 +30,7 @@ export default function Profile() {
           <CardHeader>
             <div className="flex flex-row items-left justify-left w-1/2 gap-x-5">
                 <CardTitle className="text-2xl">{username}</CardTitle>
-                <AvatarImg/>
+                <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack}/>
             </div>
           </CardHeader>
           <CardContent>

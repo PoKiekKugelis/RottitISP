@@ -15,6 +15,10 @@ export default function Profile() {
   const [birthDate, setBirthDate] = useState("2000-01-01");
   const [bio, setBio] = useState("Ay, Im walking 'ere");
 
+  const imageSrc = "https://github.com/shadcn.png";
+  const imageAlt = "@shadcn";
+  const imageFallBack = "CN";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     window.location.href='/profile';
@@ -33,7 +37,7 @@ export default function Profile() {
           <CardHeader>
             <div className="flex flex-row items-left justify-left w-1/2 gap-x-5">
                 <CardTitle className="text-2xl">{username}</CardTitle>
-                <AvatarImg/>
+                <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack}/>
             </div>
           </CardHeader>
           <CardContent>
