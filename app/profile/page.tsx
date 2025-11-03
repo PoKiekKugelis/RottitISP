@@ -36,34 +36,36 @@ export default function Profile() {
         <Card>
           <CardHeader>
             <div className="flex flex-row items-left justify-left w-1/2 gap-x-5">
-                <CardTitle className="text-2xl">{username}</CardTitle>
-                <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack}/>
+              <CardTitle className="text-2xl">{username}</CardTitle>
+              <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-left text-lg">
-                <div className="flex flex-row items-left justify-left w-1/2 gap-x-3">
-                    <h1>Country:</h1>
-                    <p>{country}</p>
-                </div>
-                <div className="flex flex-row items-left justify-left gap-x-3">
-                    <h1>Date of birth:</h1>
-                    <p>{birthDate}</p>
-                </div>
-                <div className="flex flex-row items-left justify-left w-1/2 gap-x-3">
-                    <h1>Karma points:</h1>
-                    <p>{karmaPoints}</p>
-                </div>
-                <div className="flex flex-row items-left justify-left gap-x-3">
-                    <h1>Description:</h1>
-                    <p>{bio}</p>
-                </div>
-                <br></br>
+              <div className="flex flex-row items-left justify-left w-1/2 gap-x-3">
+                <h1>Country:</h1>
+                <p>{country}</p>
+              </div>
+              <div className="flex flex-row items-left justify-left gap-x-3">
+                <h1>Date of birth:</h1>
+                <p>{birthDate}</p>
+              </div>
+              <div className="flex flex-row items-left justify-left w-1/2 gap-x-3">
+                <h1>Karma points:</h1>
+                <p>{karmaPoints}</p>
+              </div>
+              <div className="flex flex-row items-left justify-left gap-x-3">
+                <h1>Description:</h1>
+                <p>{bio}</p>
+              </div>
+              <br></br>
+              <div className="flex gap-3">
                 <Link href="/editProfile"><Button>Edit Profile</Button></Link>
                 <Link href="/badges"><Button>Set Badges</Button></Link>
-                <div className="w-1/2 flex items-right justify-right">
-                    <Link href="/logout"><Button className="float-right">Log out</Button></Link>
+                <div className="ml-auto">
+                  <Link href="/logout"><Button className="float-right">Log out</Button></Link>
                 </div>
+              </div>
             </div>
           </CardContent>
         </Card>

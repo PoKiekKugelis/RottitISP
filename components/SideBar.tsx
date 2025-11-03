@@ -39,11 +39,25 @@ export default function SideBar() {
       </Card>
 
       <Card>
-        <CardContent>
-          <h3 className="font-bold mb-2">Create Community</h3>
-          <Button className="w-full">
-            Create Community
-          </Button>
+        <CardContent className="flex flex-col gap-2">
+          <h3 className="font-bold mb-2">Community</h3>
+          <Link href="/communities/create">
+            <Button className="w-full">
+              Create Community
+            </Button>
+          </Link>
+          {/* <Link href="/"> */}
+          {/*   <Button className="w-full"> */}
+          {/*     Create Event */}
+          {/*   </Button> */}
+          {/* </Link> */}
+          {/* <Link href="/communities/create"> */}
+          {/*   <Button className="w-full"> */}
+          {/*     Edit community */}
+          {/*   </Button> */}
+          {/* </Link> */}
+
+
         </CardContent>
       </Card>
     </div>
