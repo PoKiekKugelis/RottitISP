@@ -31,6 +31,11 @@ export default function EventPage({ params }: {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <div className="my-auto gap-x-5">
+            <Link href={`../`}>
+              <div className="hover:underline">← Back</div>
+            </Link>
+          </div>
       <main className="max-w-5xl mx-auto px-4 py-6 flex gap-6">
       <Card>
         <CardHeader>

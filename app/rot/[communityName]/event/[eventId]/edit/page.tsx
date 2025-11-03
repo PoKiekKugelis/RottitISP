@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function EditEvent() {
-  const event = "../1";
+  const eventId = "1";
   const [title, setTitle] = useState("Susitikimas!");
   const [startDate, setStartDate] = useState("2025-11-18");
   const [endDate, setEndDate] = useState("2025-11-18");
@@ -98,7 +98,7 @@ export default function EditEvent() {
               </Button>
             </form>
             <br></br>
-            <Link href={event}><Button>Cancel</Button></Link>
+            <Link href={`../${eventId}`}><Button>Cancel</Button></Link>
             </div>
           </CardContent>
         </Card>

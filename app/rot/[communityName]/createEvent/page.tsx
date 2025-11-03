@@ -97,7 +97,7 @@ export default function CreateEvent() {
               </Button>
             </form>
             <br></br>
-            <Link href={community}><Button>Cancel</Button></Link>
+            <Link href={`../${community}`}><Button>Cancel</Button></Link>
             </div>
           </CardContent>
         </Card>
