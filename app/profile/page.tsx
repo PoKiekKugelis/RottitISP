@@ -20,10 +20,17 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-gradient-to-br flex items-center justify-center px-4 from-secondary/20 to-primary/20">
       <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-primary">
-            My Profile
-          </h1>
+        <div className="flex text-center gap-x-5">
+          <div className="my-auto gap-x-5">
+            <Link href="/">
+              <div className="hover:underline">← Back to Home</div>
+            </Link>
+          </div>
+          <div className="gap-x-5 mb-2">
+            <h1 className="text-4xl font-bold text-primary">
+              My Profile
+            </h1>
+          </div>
         </div>
 
         <Card>
