@@ -5,6 +5,11 @@ import { Button } from "@/components/ui/button";
 import AvatarImg from "@/components/Avatar";
 
 export default function Header() {
+
+  const imageSrc = "https://github.com/shadcn.png";
+  const imageAlt = "@shadcn";
+  const imageFallBack = "CN";
+
   return (
     <header className="bg-background border-b sticky top-0 z-69">
       <div className="max-w-7xl mx-auto px-4 py-3 flex">
@@ -27,7 +32,7 @@ export default function Header() {
           <Button asChild>
             <Link href="/register">Sign Up</Link>
           </Button>
-          <Link href="/profile"><AvatarImg/></Link>
+          <Link href="/profile"><AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack}/></Link>
         </div>
       </div>
     </header>
