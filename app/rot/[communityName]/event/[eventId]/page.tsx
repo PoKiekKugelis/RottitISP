@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import AvatarImg from "@/components/Avatar";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function EventPage({ params }: {
   params: Promise<{ communityName: string, eventId: number }>
@@ -43,10 +44,13 @@ export default function EventPage({ params }: {
             <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack}/>
             <CardTitle className="text-md">{username}</CardTitle>
             <Link href={`/rot/${communityName}`}>
-            <Badge variant="outline" className="text-xs mb-1 hover:bg-background cursor-pointer">
-              rot/{communityName}
-            </Badge>
-          </Link>
+              <Badge variant="outline" className="text-xs mb-1 hover:bg-background cursor-pointer">
+                rot/{communityName}
+              </Badge>
+            </Link>
+            <div className="flex ml-80">
+              <Link href={`/rot/${communityName}/event/${eventId}/edit`}><Button className="float-right">Edit</Button></Link>
+            </div>
           </div>
           <CardDescription>
             <p>Created at {creationDate}</p>
