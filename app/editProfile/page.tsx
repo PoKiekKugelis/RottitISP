@@ -21,7 +21,7 @@ export default function Profile() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href='/profile';
+    window.location.href = '/profile';
   };
 
   return (
@@ -36,68 +36,70 @@ export default function Profile() {
         <Card>
           <CardHeader>
             <div className="flex flex-row items-left justify-left w-1/2 gap-x-5">
-                <CardTitle className="text-2xl">{username}</CardTitle>
-                <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack}/>
+              <CardTitle className="text-2xl">{username}</CardTitle>
+              <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-left text-lg">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="Please write your username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div>
-                  <Label htmlFor="country">Country</Label>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="username">Username</Label>
+                  <Input
+                    id="username"
+                    type="text"
+                    placeholder="Please write your username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
                 </div>
-                <Input
-                  id="country"
-                  type="text"
-                  placeholder="What country are you from?"
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                />
-              </div>
 
-              <div className="space-y-2">
-                <div>
-                  <Label htmlFor="birthDate">Date of Birth</Label>
+                <div className="space-y-2">
+                  <div>
+                    <Label htmlFor="country">Country</Label>
+                  </div>
+                  <Input
+                    id="country"
+                    type="text"
+                    placeholder="What country are you from?"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                  />
                 </div>
-                <Input
-                  id="birthDate"
-                  type="date"
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
-                />
-              </div>
 
-              <div className="space-y-2">
-                <div>
-                  <Label htmlFor="bio">Description</Label>
+                <div className="space-y-2">
+                  <div>
+                    <Label htmlFor="birthDate">Date of Birth</Label>
+                  </div>
+                  <Input
+                    id="birthDate"
+                    type="date"
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                  />
                 </div>
-                <Textarea
-                  id="bio"
-                  placeholder="Write a description about yourself"
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                />
-              </div>
 
-              <Button type="submit" className="w-full">
-                Save
-              </Button>
-            </form>
-            <br></br>
-            <Link href="/changePassword"><Button>Change password</Button></Link>
-            <Link href="/profile"><Button>Cancel</Button></Link>
+                <div className="space-y-2">
+                  <div>
+                    <Label htmlFor="bio">Description</Label>
+                  </div>
+                  <Textarea
+                    id="bio"
+                    placeholder="Write a description about yourself"
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                  />
+                </div>
+
+                <Button type="submit" className="w-full">
+                  Save
+                </Button>
+              </form>
+              <br></br>
+              <div className="flex gap-2">
+                <Link href="/changePassword"><Button>Change password</Button></Link>
+                <Link href="/profile"><Button>Cancel</Button></Link>
+              </div>
             </div>
           </CardContent>
         </Card>

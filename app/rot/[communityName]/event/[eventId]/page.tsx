@@ -26,51 +26,51 @@ export default function EventPage({ params }: {
   const [startDate, setStartDate] = useState("2025-11-18 at 18:00");
   const [endDate, setEndDate] = useState("2025-11-18 at 22:00");
   const [location, setLocation] = useState("Lithuania, Kaunas, studentų g. 67");
-  const [description, setDescription] = useState("Sveiki, norėjau pranešti, kad vyksta bendruomenės susitikimas. "+
+  const [description, setDescription] = useState("Sveiki, norėjau pranešti, kad vyksta bendruomenės susitikimas. " +
     "Bus maisto ir gėrimų bei visokių įdomybių. Kviečiami visi!");
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <div className="my-auto gap-x-5">
-            <Link href={`../`}>
-              <div className="hover:underline">← Back</div>
-            </Link>
-          </div>
+        <Link href={`../`}>
+          <div className="hover:underline">← Back</div>
+        </Link>
+      </div>
       <main className="max-w-5xl mx-auto px-4 py-6 flex gap-6">
-      <Card>
-        <CardHeader>
-          <div className="flex flex-row items-left justify-left w-1/2 gap-x-2">
-            <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack}/>
-            <CardTitle className="text-md">{username}</CardTitle>
-            <Link href={`/rot/${communityName}`}>
-              <Badge variant="outline" className="text-xs mb-1 hover:bg-background cursor-pointer">
-                rot/{communityName}
-              </Badge>
-            </Link>
-            <div className="flex ml-80">
-              <Link href={`/rot/${communityName}/event/${eventId}/edit`}><Button className="float-right">Edit</Button></Link>
+        <Card>
+          <CardHeader>
+            <div className="flex flex-row items-left justify-left w-1/2 gap-x-2">
+              <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} />
+              <CardTitle className="text-md">{username}</CardTitle>
+              <Link href={`/rot/${communityName}`}>
+                <Badge variant="outline" className="text-xs mb-1 hover:bg-background cursor-pointer">
+                  rot/{communityName}
+                </Badge>
+              </Link>
+              <div className="flex ml-80">
+                <Link href={`/rot/${communityName}/event/${eventId}/edit`}><Button className="float-right">Edit</Button></Link>
+              </div>
             </div>
-          </div>
-          <CardDescription>
-            <p>Created at {creationDate}</p>
-          </CardDescription>
-          <div>
-            <h1 className="text-2xl font-bold">{title}</h1>
-          </div>
-         </CardHeader>
-         <CardContent>
-          <div className="min-w-xl max-w-5xl">
-            <p className="text-fuchsia-700 font-bold">Starts: {startDate}</p>
-            <p className="text-fuchsia-700 font-bold">Ends: {endDate}</p>
-            <p className="text-fuchsia-700 font-bold">Location: {location}</p>
-            <br></br>
-            <p>{description}</p>
-          </div>
-         </CardContent>
-      </Card>
+            <CardDescription>
+              <p>Created at {creationDate}</p>
+            </CardDescription>
+            <div>
+              <h1 className="text-2xl font-bold">{title}</h1>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="min-w-xl max-w-5xl">
+              <p className="text-fuchsia-700 font-bold">Starts: {startDate}</p>
+              <p className="text-fuchsia-700 font-bold">Ends: {endDate}</p>
+              <p className="text-fuchsia-700 font-bold">Location: {location}</p>
+              <br></br>
+              <p>{description}</p>
+            </div>
+          </CardContent>
+        </Card>
         <aside>
-          <SideBar />
+          <SideBar activeCommunity={communityName} />
         </aside>
       </main>
     </div>

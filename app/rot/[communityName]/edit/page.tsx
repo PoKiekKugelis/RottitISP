@@ -75,7 +75,7 @@ export default function EditCommunityPage({ params }: {
         </div>
 
         <aside>
-          <SideBar />
+          <SideBar activeCommunity={communityName} />
         </aside>
       </main>
     </div>

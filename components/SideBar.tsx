@@ -66,6 +66,11 @@ export default function SideBar({ activeCommunity }: SideBarProps) {
           <CardContent className="flex flex-col gap-2 pt-0">
             {activeCommunity ? (
               <>
+                <Link href={`/rot/${activeCommunity}/addPost`}>
+                  <Button className="w-full">
+                    Add post
+                  </Button>
+                </Link>
                 <Link href={`/rot/${activeCommunity}/createEvent`}>
                   <Button className="w-full">
                     Create Event
@@ -76,9 +81,10 @@ export default function SideBar({ activeCommunity }: SideBarProps) {
                     Edit Community
                   </Button>
                 </Link>
+
               </>
             ) : (
-              <Link href="/communities/create">
+              <Link href="/community/create">
                 <Button className="w-full">
                   Create Community
                 </Button>
