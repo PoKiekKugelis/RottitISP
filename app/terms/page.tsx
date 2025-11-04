@@ -7,7 +7,7 @@ export default function TermsPage() {
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="mb-8">
           <Link href="/register">
-            <div className="hover:underline">← Back to Home</div>
+            <div className="hover:underline">← Back to Sign Up</div>
           </Link>
         </div>
 

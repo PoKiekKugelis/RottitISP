@@ -25,7 +25,7 @@ export default function CreateCommunityPage() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <main className="max-w-7xl px-4 py-6 flex gap-6">
+      <main className="max-w-7xl mx-auto px-4 py-6 flex gap-6">
         <div className="flex-1">
           <Card>
             <CardHeader>

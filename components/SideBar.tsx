@@ -2,12 +2,17 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function SideBar() {
+interface SideBarProps {
+  activeCommunity?: string;
+}
+
+export default function SideBar({ activeCommunity }: SideBarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsedCom, setIsCollapsedCom] = useState(false);
 
   const communities = [
     { name: "programming", members: 5234 },
@@ -39,26 +44,48 @@ export default function SideBar() {
       </Card>
 
       <Card>
-        <CardContent className="flex flex-col gap-2">
-          <h3 className="font-bold mb-2">Community</h3>
-          <Link href="/communities/create">
-            <Button className="w-full">
-              Create Community
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>Community</CardTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 w-6 p-0"
+              onClick={() => setIsCollapsedCom(!isCollapsedCom)}
+            >
+              {isCollapsedCom ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronUp className="h-4 w-4" />
+              )}
             </Button>
-          </Link>
-          {/* <Link href="/"> */}
-          {/*   <Button className="w-full"> */}
-          {/*     Create Event */}
-          {/*   </Button> */}
-          {/* </Link> */}
-          {/* <Link href="/communities/create"> */}
-          {/*   <Button className="w-full"> */}
-          {/*     Edit community */}
-          {/*   </Button> */}
-          {/* </Link> */}
+          </div>
+        </CardHeader>
 
-
-        </CardContent>
+        {!isCollapsedCom && (
+          <CardContent className="flex flex-col gap-2 pt-0">
+            {activeCommunity ? (
+              <>
+                <Link href={`/rot/${activeCommunity}/createEvent`}>
+                  <Button className="w-full">
+                    Create Event
+                  </Button>
+                </Link>
+                <Link href={`/rot/${activeCommunity}/edit`}>
+                  <Button className="w-full">
+                    Edit Community
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <Link href="/communities/create">
+                <Button className="w-full">
+                  Create Community
+                </Button>
+              </Link>
+            )}
+          </CardContent>
+        )}
       </Card>
     </div>
   );
@@ -67,7 +94,8 @@ export default function SideBar() {
     <div className="relative">
       <Button
         variant="outline"
-        className="absolute -left-3 top-4 h-8 w-8 rounded-full "
+        size="icon"
+        className="absolute -left-3 top-4 h-8 w-8 rounded-full"
         onClick={() => setIsCollapsed(!isCollapsed)}
       >
         {isCollapsed ? (
