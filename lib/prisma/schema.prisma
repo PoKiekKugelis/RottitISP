@@ -21,21 +21,24 @@ model Test {
 }
 
 model User {
-  id                   Int         @id @default(autoincrement())
-  loginName            String      @unique @db.VarChar(30)
-  email                String      @unique @db.VarChar(50)
-  password             String      @db.VarChar(30)
+  id                   Int                @id @default(autoincrement())
+  loginName            String             @unique @db.VarChar(30)
+  email                String             @unique @db.VarChar(50)
+  password             String             @db.VarChar(30)
   avatar               String
-  country              String      @db.VarChar(50)
-  createdAt            DateTime    @default(now())
-  username             String      @unique @db.VarChar(30)
-  karma                Int         @default(0)
+  country              String             @db.VarChar(50)
+  createdAt            DateTime           @default(now())
+  username             String             @unique @db.VarChar(30)
+  karma                Int                @default(0)
   bio                  String
   birthdate            DateTime
-  status               Boolean     @db.Boolean @default(false)
+  status               Boolean            @db.Boolean @default(false)
   badges               UserBadge[]
   createdCommunities   Community[]
   communities          CommunityMember[]
+  posts                Post[]
+  comments             Comment[]
+  likes                Like[]
 }
 
 enum Rarity {
@@ -75,6 +78,8 @@ model Community {
   moderators      Moderator[]
   members         CommunityMember[]
   tags            CommunityTag[]
+  events          Event[]
+  posts           Post[]
 }
 
 model CommunityMember {
@@ -91,6 +96,7 @@ model Moderator {
   assignedBy     String      @db.VarChar(30)
   communityId    Int
   community      Community   @relation(fields: [communityId], references: [id])
+  events         Event[]
 }
 
 model Tag {
@@ -107,4 +113,79 @@ model CommunityTag {
   community      Community   @relation(fields: [communityId], references: [id])
   tag            Tag         @relation(fields: [tagId], references: [id])
   @@id([communityId, tagId])
+}
+
+model Event {
+  id            Int         @id @default(autoincrement())
+  name          String      @unique @db.VarChar(50)
+  description   String
+  startsAt      DateTime
+  endsAt        DateTime
+  address       String
+  createdAt     DateTime    @default(now())
+  editStatus    Boolean     @db.Boolean @default(false)
+  communityId   Int
+  community     Community   @relation(fields: [communityId], references: [id])
+  creatorId     Int
+  creator       Moderator   @relation(fields: [creatorId], references: [id])
+}
+
+model Post {
+  id             Int         @id @default(autoincrement())
+  name           String      @unique @db.VarChar(50)
+  description    String
+  createdAt      DateTime    @default(now())
+  likesCount     Int         @default(0)
+  editStatus     Boolean     @db.Boolean @default(false)
+  views          Int         @default(0)
+  ageRestriction Boolean     @db.Boolean @default(false) 
+  communityId    Int
+  community      Community   @relation(fields: [communityId], references: [id])
+  creatorId      Int
+  creator        User        @relation(fields: [creatorId], references: [id])
+  comments       Comment[]
+  likes          Like[]
+  attachment     File?
+}
+
+model Comment {
+  id             Int         @id @default(autoincrement())
+  content        String
+  createdAt      DateTime    @default(now())
+  editStatus     Boolean     @db.Boolean @default(false)
+  postId         Int
+  post           Post        @relation(fields: [postId], references: [id])
+  creatorId      Int
+  creator        User        @relation(fields: [creatorId], references: [id])
+  replies        Reply[]
+}
+
+model Reply {
+  commentId    Int       @id
+  parentId     Int
+  parent       Comment   @relation(fields: [parentId], references: [id])
+}
+
+model Like {
+  id          Int       @id @default(autoincrement())
+  likeStatus  Boolean   @db.Boolean @default(false)
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  postId      Int
+  post        Post      @relation(fields: [postId], references: [id])
+}
+
+model File {
+  id        Int       @id @default(autoincrement())
+  link      String
+  content   String
+  type      String
+  size      Int
+  postId    Int       @unique
+  post      Post      @relation(fields: [postId], references: [id])
+}
+
+model Administrator {
+  id          Int         @id
+  assignedAt  DateTime    @default(now())
 }
