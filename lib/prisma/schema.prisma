@@ -19,3 +19,92 @@ model Test {
   name      String     @db.VarChar(255)
   email     String     @unique
 }
+
+model User {
+  id                   Int         @id @default(autoincrement())
+  loginName            String      @unique @db.VarChar(30)
+  email                String      @unique @db.VarChar(50)
+  password             String      @db.VarChar(30)
+  avatar               String
+  country              String      @db.VarChar(50)
+  createdAt            DateTime    @default(now())
+  username             String      @unique @db.VarChar(30)
+  karma                Int         @default(0)
+  bio                  String
+  birthdate            DateTime
+  status               Boolean     @db.Boolean @default(false)
+  badges               UserBadge[]
+  createdCommunities   Community[]
+  communities          CommunityMember[]
+}
+
+enum Rarity {
+  Common
+  Rare
+  Epic
+}
+
+model Badge {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(50)
+  description String
+  avatar      String
+  price       Int
+  rarity      Rarity
+  users       UserBadge[]
+}
+
+model UserBadge {
+  userId    Int
+  badgeId   Int
+  user      User   @relation(fields: [userId], references: [id])
+  badge     Badge  @relation(fields: [badgeId], references: [id])
+  @@id([userId, badgeId])
+}
+
+model Community {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique @db.VarChar(50)
+  description     String
+  createdAt       DateTime          @default(now())
+  avatar          String
+  header          String
+  ageRestriction  Boolean           @db.Boolean @default(false)
+  creatorId       Int
+  creator         User              @relation(fields: [creatorId], references: [id])
+  moderators      Moderator[]
+  members         CommunityMember[]
+  tags            CommunityTag[]
+}
+
+model CommunityMember {
+  communityId    Int
+  userId         Int
+  community      Community   @relation(fields: [communityId], references: [id])
+  user           User        @relation(fields: [userId], references: [id])
+  @@id([communityId, userId])
+}
+
+model Moderator {
+  id             Int         @id
+  assignedAt     DateTime    @default(now())
+  assignedBy     String      @db.VarChar(30)
+  communityId    Int
+  community      Community   @relation(fields: [communityId], references: [id])
+}
+
+model Tag {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique @db.VarChar(50)
+  description   String
+  group         String?         @db.VarChar(50)
+  communities   CommunityTag[]
+}
+
+model CommunityTag {
+  communityId    Int
+  tagId          Int
+  community      Community   @relation(fields: [communityId], references: [id])
+  tag            Tag         @relation(fields: [tagId], references: [id])
+  @@id([communityId, tagId])
+}
