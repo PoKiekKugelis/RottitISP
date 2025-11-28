@@ -17,7 +17,7 @@ datasource db {
 model Test {
   id        Int        @id @default(autoincrement())
   name      String     @db.VarChar(255)
-  email     String     @unique
+  email     String     @unique @db.VarChar(255)
 }
 
 model User {
@@ -25,12 +25,12 @@ model User {
   loginName            String             @unique @db.VarChar(30)
   email                String             @unique @db.VarChar(50)
   password             String             @db.VarChar(30)
-  avatar               String
+  avatar               String             @db.VarChar(255)
   country              String             @db.VarChar(50)
   createdAt            DateTime           @default(now())
   username             String             @unique @db.VarChar(30)
   karma                Int                @default(0)
-  bio                  String
+  bio                  String             @db.VarChar(255)
   birthdate            DateTime
   status               Boolean            @db.Boolean @default(false)
   badges               UserBadge[]
@@ -50,8 +50,8 @@ enum Rarity {
 model Badge {
   id          Int       @id @default(autoincrement())
   name        String    @unique @db.VarChar(50)
-  description String
-  avatar      String
+  description String    @db.VarChar(255)
+  avatar      String    @db.VarChar(255)
   price       Int
   rarity      Rarity
   users       UserBadge[]
@@ -68,10 +68,10 @@ model UserBadge {
 model Community {
   id              Int               @id @default(autoincrement())
   name            String            @unique @db.VarChar(50)
-  description     String
+  description     String            @db.VarChar(255)
   createdAt       DateTime          @default(now())
-  avatar          String
-  header          String
+  avatar          String            @db.VarChar(255)
+  header          String            @db.VarChar(255)
   ageRestriction  Boolean           @db.Boolean @default(false)
   creatorId       Int
   creator         User              @relation(fields: [creatorId], references: [id])
@@ -102,7 +102,7 @@ model Moderator {
 model Tag {
   id            Int             @id @default(autoincrement())
   name          String          @unique @db.VarChar(50)
-  description   String
+  description   String          @db.VarChar(255)
   group         String?         @db.VarChar(50)
   communities   CommunityTag[]
 }
@@ -118,10 +118,10 @@ model CommunityTag {
 model Event {
   id            Int         @id @default(autoincrement())
   name          String      @unique @db.VarChar(50)
-  description   String
+  description   String      @db.VarChar(255)
   startsAt      DateTime
   endsAt        DateTime
-  address       String
+  address       String      @db.VarChar(255)
   createdAt     DateTime    @default(now())
   editStatus    Boolean     @db.Boolean @default(false)
   communityId   Int
@@ -133,7 +133,7 @@ model Event {
 model Post {
   id             Int         @id @default(autoincrement())
   name           String      @unique @db.VarChar(50)
-  description    String
+  description    String      @db.VarChar(255)
   createdAt      DateTime    @default(now())
   likesCount     Int         @default(0)
   editStatus     Boolean     @db.Boolean @default(false)
@@ -150,7 +150,7 @@ model Post {
 
 model Comment {
   id             Int         @id @default(autoincrement())
-  content        String
+  content        String      @db.VarChar(255)
   createdAt      DateTime    @default(now())
   editStatus     Boolean     @db.Boolean @default(false)
   postId         Int
@@ -177,9 +177,9 @@ model Like {
 
 model File {
   id        Int       @id @default(autoincrement())
-  link      String
-  content   String
-  type      String
+  link      String    @db.VarChar(255)
+  content   String    @db.VarChar(255)
+  type      String    @db.VarChar(10)
   size      Int
   postId    Int       @unique
   post      Post      @relation(fields: [postId], references: [id])
