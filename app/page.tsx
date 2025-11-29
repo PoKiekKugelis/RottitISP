@@ -2,7 +2,8 @@ import Header from "@/components/Header";
 import PostFeed from "@/components/PostFeed";
 import { prisma } from "@/lib/prisma";
 import SideBar from "@/components/SideBar";
-import { User } from "@/models/user/entities/user.entity";
+//import { User } from "@/models/user/entities/user.entity";
+import { User, UserSchema } from "@/models/user/schemas/user.schema";
 
 async function testDB() {
   // This function is purely to test out that DB queries work
@@ -19,6 +20,7 @@ async function testDB() {
 
 testDB()
 
+// To test out Zod, you can change the attribute values as you see fit
 const user: User = {
   id: 1,
   loginName: "test",
@@ -34,63 +36,40 @@ const user: User = {
   status: false
 };
 
-/*
-const user = new User();
-user.loginName = "test";
-user.email = "test@gmail.com";
-user.password = "pass";
-user.avatar = "";
-user.country = "Lithuania";
-user.username = "test";
-user.karma = 0;
-user.bio = "I am test";
-user.birthdate = new Date("2020-1-1");
-*/
-
 //This is purely to test out if we can create an instance of the given object in DB table User
 async function createUser(userData: User) {
-  /*
-  await prisma.user.create({
-    data: {
-      id: userData.id,
-      loginName: userData.loginName,
-      email: userData.email,
-      password: userData.password,
-      avatar: userData.avatar,
-      country: userData.country,
-      createdAt: userData.createdAt,
-      username: userData.username,
-      karma: userData.karma,
-      bio: userData.bio,
-      birthdate: userData.birthdate,
-      status: userData.status
-    },
-  });
-  */
+  
+  console.log("\n ZOD test\n");
+  const result = UserSchema.safeParse(user);
+  if (!result.success) {
+    console.log(result.error);   // ZodError instance
+  } else {
+    console.log(result.data);
 
-  const isNameUsed = await prisma.user.findFirst({
-    where: {
-      loginName: userData.loginName
-    }
-  });
-
-  if (isNameUsed != null) {
-    console.log("A user with that name is already registered in DB. Name = ", userData.loginName);
-  }
-
-  else {
-    await prisma.user.create({
-      data: {
-        loginName: userData.loginName,
-        email: userData.email,
-        password: userData.password,
-        avatar: userData.avatar,
-        country: userData.country,
-        username: userData.username,
-        bio: userData.bio,
-        birthdate: userData.birthdate
-      },
+    const isNameUsed = await prisma.user.findFirst({
+      where: {
+        loginName: userData.loginName
+      }
     });
+
+    if (isNameUsed != null) {
+      console.log("A user with that name is already registered in DB. Name = ", userData.loginName);
+    }
+
+    else {
+      await prisma.user.create({
+        data: {
+          loginName: userData.loginName,
+          email: userData.email,
+          password: userData.password,
+          avatar: userData.avatar,
+          country: userData.country,
+          username: userData.username,
+          bio: userData.bio,
+          birthdate: userData.birthdate
+        },
+      });
+    }
   }
 }
 
