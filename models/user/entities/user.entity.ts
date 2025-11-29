@@ -9,21 +9,21 @@ import {Like} from '../../like/entities/like.entity'
 
 export interface User {
   id: number ;
-loginName: string ;
-email: string ;
-password: string ;
-avatar: string ;
-country: string ;
-createdAt: Date ;
-username: string ;
-karma: number ;
-bio: string ;
-birthdate: Date ;
-status: boolean ;
-badges?: UserBadge[] ;
-createdCommunities?: Community[] ;
-communities?: CommunityMember[] ;
-posts?: Post[] ;
-comments?: Comment[] ;
-likes?: Like[] ;
+  loginName: string ;
+  email: string ;
+  password: string ;
+  avatar: string ;
+  country: string ;
+  createdAt: Date ;
+  username: string ;
+  karma: number ;
+  bio: string ;
+  birthdate: Date ;
+  status: boolean ;
+  badges?: UserBadge[] ;
+  createdCommunities?: Community[] ;
+  communities?: CommunityMember[] ;
+  posts?: Post[] ;
+  comments?: Comment[] ;
+  likes?: Like[] ;
 }
