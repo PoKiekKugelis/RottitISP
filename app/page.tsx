@@ -23,16 +23,16 @@ testDB()
 // To test out Zod, you can change the attribute values as you see fit
 const user: User = {
   id: 1,
-  loginName: "test",
-  email: "test@gmail.com",
+  loginName: "testBirthDate2",
+  email: "testBirthDate2@gmail.com",
   password: "pass",
   avatar: "",
   country: "",
   createdAt: new Date(),
-  username: "test",
+  username: "testBirthDate2",
   karma: 0,
-  bio: "I am test",
-  birthdate: new Date("2020-1-1"),
+  bio: "I am testBirthDate2",
+  birthdate: new Date("2020-1-2"),
   status: false
 };
 
