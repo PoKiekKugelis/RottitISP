@@ -7,6 +7,7 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
+  previewFeatures = ["nativeTypes"]
 }
 
 datasource db {
@@ -27,11 +28,11 @@ model User {
   password             String             @db.VarChar(30)
   avatar               String             @db.VarChar(255)
   country              String             @db.VarChar(50)
-  createdAt            DateTime           @default(now())
+  createdAt            DateTime           @db.Date @default(now())
   username             String             @unique @db.VarChar(30)
   karma                Int                @default(0)
   bio                  String             @db.VarChar(255)
-  birthdate            DateTime
+  birthdate            DateTime           @db.Date
   status               Boolean            @db.Boolean @default(false)
   badges               UserBadge[]
   createdCommunities   Community[]
@@ -69,7 +70,7 @@ model Community {
   id              Int               @id @default(autoincrement())
   name            String            @unique @db.VarChar(50)
   description     String            @db.VarChar(255)
-  createdAt       DateTime          @default(now())
+  createdAt       DateTime          @db.Date @default(now())
   avatar          String            @db.VarChar(255)
   header          String            @db.VarChar(255)
   ageRestriction  Boolean           @db.Boolean @default(false)
@@ -92,7 +93,7 @@ model CommunityMember {
 
 model Moderator {
   id             Int         @id
-  assignedAt     DateTime    @default(now())
+  assignedAt     DateTime    @db.Date @default(now())
   assignedBy     String      @db.VarChar(30)
   communityId    Int
   community      Community   @relation(fields: [communityId], references: [id])
@@ -119,8 +120,8 @@ model Event {
   id            Int         @id @default(autoincrement())
   name          String      @unique @db.VarChar(50)
   description   String      @db.VarChar(255)
-  startsAt      DateTime
-  endsAt        DateTime
+  startsAt      DateTime    @db.Date
+  endsAt        DateTime    @db.Date
   address       String      @db.VarChar(255)
   createdAt     DateTime    @default(now())
   editStatus    Boolean     @db.Boolean @default(false)
@@ -134,7 +135,7 @@ model Post {
   id             Int         @id @default(autoincrement())
   name           String      @unique @db.VarChar(50)
   description    String      @db.VarChar(255)
-  createdAt      DateTime    @default(now())
+  createdAt      DateTime    @db.Date @default(now())
   likesCount     Int         @default(0)
   editStatus     Boolean     @db.Boolean @default(false)
   views          Int         @default(0)
@@ -151,7 +152,7 @@ model Post {
 model Comment {
   id             Int         @id @default(autoincrement())
   content        String      @db.VarChar(255)
-  createdAt      DateTime    @default(now())
+  createdAt      DateTime    @db.Date @default(now())
   editStatus     Boolean     @db.Boolean @default(false)
   postId         Int
   post           Post        @relation(fields: [postId], references: [id])
@@ -187,5 +188,5 @@ model File {
 
 model Administrator {
   id          Int         @id
-  assignedAt  DateTime    @default(now())
+  assignedAt  DateTime    @db.Date @default(now())
 }
