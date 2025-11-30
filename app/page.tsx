@@ -2,7 +2,6 @@ import Header from "@/components/Header";
 import PostFeed from "@/components/PostFeed";
 import { prisma } from "@/lib/prisma";
 import SideBar from "@/components/SideBar";
-//import { User } from "@/models/user/entities/user.entity";
 import { User, UserSchema } from "@/models/user/schemas/user.schema";
 
 async function testDB() {

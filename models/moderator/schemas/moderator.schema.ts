@@ -8,6 +8,7 @@ export const ModeratorSchema = z.object({
 })
 
 export const CreateModeratorSchema = z.object({
+    id: z.number(),
     assignedBy: z.string().max(30),
     communityId: z.number()
 });

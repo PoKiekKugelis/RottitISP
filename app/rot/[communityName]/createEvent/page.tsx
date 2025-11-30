@@ -7,20 +7,66 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { DateTimePicker } from "@/components/DateTimePicker";
+import { prisma } from "@/lib/prisma";
+import { z } from 'zod';
 import { CreateEvent, CreateEventSchema } from "@/models/event/schemas/event.schema";
 
 export default function createEvent() {
   const community = "programming";
   const [title, setTitle] = useState("");
-  const [startDate, setStartDate] = useState("2000-01-01");
-  const [endDate, setEndDate] = useState("2000-01-01");
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
 
+  const communityId = 2; //Get from URL
+  const creatorId = 1; //Get from session?
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href = '../programming/event/1';
+
+    // Creates possible event entry with the given data
+    const event: CreateEvent = {
+      title: title,
+      description: description,
+      startsAt: startDate,
+      endsAt: endDate,
+      address: location,
+      communityId: communityId,
+      creatorId: creatorId
+    }
+
+    // Creates entry in the event table with the given data if data is valid
+    await createEventEntry(event);
+    //window.location.href = '../programming/event/1';
   };
+
+  const createEventEntry = async (eventData: CreateEvent) => {
+    // Checks if the attribute values are valid
+    try {
+      CreateEventSchema.parse(eventData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        console.log(error.issues);
+      }
+    }
+
+    console.log("\n\nThe start date is:" + eventData.startsAt + "\n\n");
+    /*
+    // Creates entry in the event table with the given data
+    await prisma.event.create({
+      data: {
+        title: eventData.title,
+        description: eventData.description,
+        startsAt: eventData.startsAt,
+        endsAt: eventData.endsAt,
+        address: eventData.address,
+        communityId: eventData.communityId,
+        creatorId: eventData.creatorId
+      }
+    });*/
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br flex items-center justify-center px-4 from-secondary/20 to-primary/20">
@@ -50,24 +96,14 @@ export default function createEvent() {
                     <div>
                       <Label htmlFor="startDate" className="text-xl">Start date</Label>
                     </div>
-                    <Input
-                      id="startDate"
-                      type="date"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                    />
+                    <DateTimePicker date={startDate} setDate={setStartDate}></DateTimePicker>
                   </div>
 
                   <div className="space-y-2">
                     <div>
                       <Label htmlFor="endDate" className="text-xl">End date</Label>
                     </div>
-                    <Input
-                      id="endDate"
-                      type="date"
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                    />
+                    <DateTimePicker date={endDate} setDate={setEndDate}></DateTimePicker>
                   </div>
 
                   <div className="space-y-2">
