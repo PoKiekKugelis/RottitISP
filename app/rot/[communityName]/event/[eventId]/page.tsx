@@ -28,6 +28,7 @@ export default function EventPage({ params }: {
   const [location, setLocation] = useState("Lithuania, Kaunas, studentų g. 67");
   const [description, setDescription] = useState("Sveiki, norėjau pranešti, kad vyksta bendruomenės susitikimas. " +
     "Bus maisto ir gėrimų bei visokių įdomybių. Kviečiami visi!");
+  const [editStatus, setEditStatus] = useState(true);
 
   return (
     <div className="min-h-screen bg-background">
@@ -53,7 +54,10 @@ export default function EventPage({ params }: {
               </div>
             </div>
             <CardDescription>
-              <p>Created at {creationDate}</p>
+              <div className="flex gap-2 items-left justify-left">
+                <p>Created at {creationDate}</p>
+                <p>{editStatus? "•Edited": ""}</p>
+              </div>
             </CardDescription>
             <div>
               <h1 className="text-2xl font-bold">{title}</h1>
