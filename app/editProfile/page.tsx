@@ -10,6 +10,9 @@ import { Textarea } from "@/components/ui/textarea";
 import AvatarImg from "@/components/Avatar";
 
 export default function Profile() {
+  const currentUsername = "Nickas";
+  const [avatar, setAvatar] = useState("");
+  const [loginName, setLoginName] = useState("Nickas");
   const [username, setUsername] = useState("Nickas");
   const [country, setCountry] = useState("Lithuania");
   const [birthDate, setBirthDate] = useState("2000-01-01");
@@ -21,7 +24,18 @@ export default function Profile() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href = '/profile';
+
+    // Checks if the uploaded file is in the correct format (extension)
+    if (avatar != "") {
+      const fileExtension = avatar.split('.').pop();
+      if (fileExtension == "jpg" || fileExtension == "png") {
+        console.log("The file extension is valid");
+      } else {
+        console.log("The file has to be jpg or png");
+      }
+    }
+
+    //window.location.href = '/profile';
   };
 
   return (
@@ -36,13 +50,35 @@ export default function Profile() {
         <Card>
           <CardHeader>
             <div className="flex flex-row items-left justify-left w-1/2 gap-x-5">
-              <CardTitle className="text-2xl">{username}</CardTitle>
+              <CardTitle className="text-2xl">{currentUsername}</CardTitle>
               <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-left text-lg">
               <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="avatar">Avatar</Label>
+                  <Input
+                    id="avatar"
+                    type="file"
+                    placeholder="Change your avatar"
+                    value={avatar}
+                    onChange={(e) => setAvatar(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="loginName">Login name</Label>
+                  <Input
+                    id="loginName"
+                    type="text"
+                    placeholder="Please write your login name"
+                    value={loginName}
+                    onChange={(e) => setLoginName(e.target.value)}
+                  />
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="username">Username</Label>
                   <Input

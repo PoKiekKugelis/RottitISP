@@ -15,12 +15,16 @@ import {
 
 interface DateTimePickerProps {
   date: Date;
+  time : string;
   setDate: (date:Date) => void;
+  setTime: (date:string) => void;
 }
 
 export function DateTimePicker({
     date,
-    setDate
+    time,
+    setDate,
+    setTime
 }: DateTimePickerProps) {
   const [open, setOpen] = React.useState(false)
   //const [date2, setDate] = React.useState<Date | undefined>(undefined)
@@ -38,12 +42,13 @@ export function DateTimePicker({
               id="date-picker"
               className="w-32 justify-between font-normal"
             >
-              {date ? date.toLocaleDateString() : "Select date"}
+              {date ? date.toLocaleDateString("lt-LT") : "Select date"}
               <ChevronDownIcon />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto overflow-hidden p-0" align="start">
             <Calendar
+              required
               mode="single"
               selected={date}
               captionLayout="dropdown"
@@ -62,11 +67,13 @@ export function DateTimePicker({
           Time
         </Label>
         <Input
+          required
           type="time"
           id="time-picker"
-          step="1"
-          defaultValue="10:30:00"
+          step="60"
           className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
         />
       </div>
     </div>

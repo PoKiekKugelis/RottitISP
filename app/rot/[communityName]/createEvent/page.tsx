@@ -16,7 +16,9 @@ export default function createEvent() {
   const community = "programming";
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState<Date>(new Date());
+  const [startTime, setStartTime] = useState<string>("");
   const [endDate, setEndDate] = useState<Date>(new Date());
+  const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
 
@@ -25,6 +27,9 @@ export default function createEvent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const dateString = startDate.toLocaleDateString("lt-LT") + "T" + startTime;
+    console.log("The date and time is: " + dateString);
 
     // Creates possible event entry with the given data
     const event: CreateEvent = {
@@ -96,14 +101,14 @@ export default function createEvent() {
                     <div>
                       <Label htmlFor="startDate" className="text-xl">Start date</Label>
                     </div>
-                    <DateTimePicker date={startDate} setDate={setStartDate}></DateTimePicker>
+                    <DateTimePicker date={startDate} time={startTime} setDate={setStartDate} setTime={setStartTime}></DateTimePicker>
                   </div>
 
                   <div className="space-y-2">
                     <div>
                       <Label htmlFor="endDate" className="text-xl">End date</Label>
                     </div>
-                    <DateTimePicker date={endDate} setDate={setEndDate}></DateTimePicker>
+                    <DateTimePicker date={endDate} time={endTime} setDate={setEndDate} setTime={setEndTime}></DateTimePicker>
                   </div>
 
                   <div className="space-y-2">

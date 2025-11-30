@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import AvatarImg from "@/components/Avatar";
 
@@ -12,6 +12,8 @@ export default function Profile() {
   const [birthDate, setBirthDate] = useState("2000-01-01");
   const [karmaPoints, setKarmaPoints] = useState(1000);
   const [bio, setBio] = useState("Ay, Im walking 'ere");
+  const [creationDate, setCreationDate] = useState("2025-11-02");
+  const [onlineStatus, setOnlineStatus] = useState(false);
 
   const imageSrc = "https://github.com/shadcn.png";
   const imageAlt = "@shadcn";
@@ -39,6 +41,12 @@ export default function Profile() {
               <CardTitle className="text-2xl">{username}</CardTitle>
               <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} />
             </div>
+            <CardDescription>
+              <div className="flex gap-2 items-left justify-left">
+                <p>Created at {creationDate}</p>
+                {onlineStatus? <p className="text-green-500">•Online</p>: <p className="text-red-500">•Offline</p>}
+              </div>
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-left text-lg">
