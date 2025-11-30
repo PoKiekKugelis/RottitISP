@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { CreateEvent, CreateEventSchema } from "@/models/event/schemas/event.schema";
 
-export default function CreateEvent() {
+export default function createEvent() {
   const community = "programming";
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("2000-01-01");

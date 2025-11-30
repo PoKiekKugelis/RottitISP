@@ -5,7 +5,7 @@ import {Moderator} from '../../moderator/entities/moderator.entity'
 
 export interface Event {
   id: number ;
-  name: string ;
+  title: string ;
   description: string ;
   startsAt: Date ;
   endsAt: Date ;

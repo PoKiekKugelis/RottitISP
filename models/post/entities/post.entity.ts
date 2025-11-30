@@ -8,7 +8,7 @@ import {File} from '../../file/entities/file.entity'
 
 export interface Post {
   id: number ;
-  name: string ;
+  title: string ;
   description: string ;
   createdAt: Date ;
   likesCount: number ;
