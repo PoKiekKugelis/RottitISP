@@ -1,6 +1,7 @@
 import { CreateCommunity } from "@/models/community/schemas/community.schema";
 import { CommunityService } from "@/services/community.service"
 import { CommunityRepository } from "@/repositories/community.repository";
+import { requireAuth } from "@/lib/auth"
 
 export async function GET(req: Request) {
   try {
@@ -13,6 +14,8 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const session = await requireAuth()
+  if (session instanceof Response) return session
   try {
     const body = await req.json();
     const validationResult = CreateCommunity.safeParse(body);
@@ -23,7 +26,7 @@ export async function POST(req: Request) {
         { status: 422 }
       );
     }
-    const community = await CommunityService.register({ ...validationResult.data, creatorId: 1 });
+    const community = await CommunityService.register({ ...validationResult.data, creatorId: parseInt(session.user.id) });
     if (community == null) {
       return Response.json({ error: "Community with this name already exists" }, { status: 409 })
     }

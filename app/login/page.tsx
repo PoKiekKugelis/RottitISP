@@ -6,8 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation"
+import { UserService } from "@/services/user.service";
 
 export default function Login() {
   const router = useRouter();
@@ -21,11 +21,7 @@ export default function Login() {
     setError("");
     setIsLoading(true);
     try {
-      const result = await signIn("credentials", {
-        loginName: loginName,
-        password: password,
-        redirect: false,
-      })
+      const result = await UserService.login(loginName, password);
       if (result?.error) {
         setError("Invalid credentials")
         return;

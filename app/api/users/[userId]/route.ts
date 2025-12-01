@@ -1,6 +1,7 @@
 import { UserRepository } from "@/repositories/user.repository";
 import { UserService } from "@/services/user.service";
 import { UpdateUser } from "@/models/user/schemas/user.schema";
+import { requireAuth, requireAdmin } from "@/lib/auth"
 
 export async function GET(req: Request, { params }: { params: Promise<{ userId: string }> }) {
   try {
@@ -16,8 +17,16 @@ export async function GET(req: Request, { params }: { params: Promise<{ userId: 
 
 export async function PUT(req: Request, { params }: { params: Promise<{ userId: string }> }) {
   try {
+    const session = await requireAuth();
+    if (session instanceof Response) return session
     const { userId } = await params;
     const id = parseInt(userId);
+    if (parseInt(session.user.id) != id) {
+      return Response.json(
+        { error: "Forbidden - no permissions" },
+        { status: 403 }
+      )
+    }
 
     if (isNaN(id)) {
       return Response.json({ error: "Invalid user ID" }, { status: 400 })
@@ -44,6 +53,8 @@ export async function DELETE(
   request: Response,
   { params }: { params: Promise<{ userId: string }> }
 ) {
+  const session = await requireAdmin();
+  if (session instanceof Response) return session
   try {
     const { userId } = await params;
     const id = parseInt(userId);

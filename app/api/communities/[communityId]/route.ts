@@ -1,6 +1,7 @@
 import { CommunityRepository } from "@/repositories/community.repository";
 import { CommunityService } from "@/services/community.service";
 import { UpdateCommunity } from "@/models/community/schemas/community.schema";
+import { requireModerator, requireAdmin } from "@/lib/auth"
 
 export async function GET(req: Request, { params }: { params: Promise<{ communityId: string }> }) {
   try {
@@ -18,6 +19,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ communit
   try {
     const { communityId } = await params;
     const id = parseInt(communityId);
+    const session = await requireModerator(id);
+    if (session instanceof Response) return session
 
     if (isNaN(id)) {
       return Response.json({ error: "Invalid community ID" }, { status: 400 })
@@ -47,6 +50,8 @@ export async function DELETE(
   try {
     const { communityId } = await params;
     const id = parseInt(communityId);
+    const session = await requireAdmin();
+    if (session instanceof Response) return session
 
     if (isNaN(id)) {
       return Response.json(

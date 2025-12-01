@@ -2,12 +2,6 @@
 import { CommunityRepository } from "@/repositories/community.repository";
 
 export class CommunityService {
-  static async join() {
-    //TODO
-  }
-  static async leave() {
-    //TODO
-  }
   static async register(data: {
     name: string,
     description: string,
@@ -22,5 +16,19 @@ export class CommunityService {
       return null
     }
     return await CommunityRepository.create(data);
+  }
+  static async joinCommunity(userId: number, communityId: number) {
+    const existing = await CommunityRepository.findMember(userId, communityId)
+    if (existing) {
+      throw new Error("Already a member");
+    }
+    return await CommunityRepository.createMember(userId, communityId)
+  }
+
+  static async leaveCommunity(userId: number, communityId: number) {
+    if (await CommunityRepository.isCreator(userId, communityId)) {
+      throw new Error("Creator cannot leave community");
+    }
+    return await CommunityRepository.deleteMember(userId, communityId);
   }
 }

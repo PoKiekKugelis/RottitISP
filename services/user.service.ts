@@ -1,11 +1,16 @@
 import { UserRepository } from "@/repositories/user.repository";
+import { signIn, signOut } from "next-auth/react";
 
 export class UserService {
-  static async login() {
-    //TODO
+  static async login(loginName: string, password: string) {
+    return await signIn("credentials", {
+      loginName: loginName,
+      password: password,
+      redirect: false,
+    })
   }
   static async logout() {
-    //TODO
+    return await signOut();
   }
   static async register(data: {
     loginName: string,
