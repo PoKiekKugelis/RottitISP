@@ -9,9 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DateTimePicker } from "@/components/DateTimePicker";
 import { use } from "react";
-import { prisma } from "@/lib/prisma";
 import { z } from 'zod';
-import { CreateEvent, CreateEventSchema } from "@/models/event/schemas/event.schema";
+import { CreateEvent } from "@/models/event/schemas/event.schema";
 
 export default function createEvent({ params }: {
   params: Promise<{ communityName: string }>
@@ -35,6 +34,7 @@ export default function createEvent({ params }: {
     console.log("The date and time is: " + dateString);
 
     // Creates possible event entry with the given data
+    /*
     const event: CreateEvent = {
       title: title,
       description: description,
@@ -44,16 +44,17 @@ export default function createEvent({ params }: {
       communityId: communityId,
       creatorId: creatorId
     }
+    */
 
     // Creates entry in the event table with the given data if data is valid
-    await createEventEntry(event);
+    //await createEventEntry(event);
     //window.location.href = '../programming/event/1';
   };
 
   const createEventEntry = async (eventData: CreateEvent) => {
     // Checks if the attribute values are valid
     try {
-      CreateEventSchema.parse(eventData);
+      CreateEvent.parse(eventData);
     } catch (error) {
       if (error instanceof z.ZodError) {
         console.log(error.issues);

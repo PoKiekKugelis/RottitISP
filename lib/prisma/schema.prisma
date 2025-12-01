@@ -121,7 +121,7 @@ model CommunityTag {
 
 model Event {
   id                  Int         @id @default(autoincrement())
-  title               String      @unique @db.VarChar(50)
+  title               String      @db.VarChar(50)
   description         String      @db.VarChar(255)
   startsAt            DateTime    @db.Date
   endsAt              DateTime    @db.Date
@@ -137,7 +137,7 @@ model Event {
 
 model Post {
   id             Int         @id @default(autoincrement())
-  title          String      @unique @db.VarChar(50)
+  title          String      @db.VarChar(50)
   description    String      @db.VarChar(255)
   createdAt      DateTime    @db.Date @default(now())
   likesCount     Int         @default(0)
