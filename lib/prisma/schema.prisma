@@ -40,6 +40,7 @@ model User {
   posts                Post[]
   comments             Comment[]
   likes                Like[]
+  moderators           Moderator[]
 }
 
 enum Rarity {
@@ -92,14 +93,16 @@ model CommunityMember {
 }
 
 model Moderator {
-  id             Int         @id
+  userId         Int
+  communityId    Int
   assignedAt     DateTime    @db.Date @default(now())
   assignedBy     String      @db.VarChar(30)
-  communityId    Int
+  user           User        @relation(fields: [userId], references: [id])
   community      Community   @relation(fields: [communityId], references: [id])
   events         Event[]
+  
+  @@id([userId, communityId])
 }
-
 model Tag {
   id            Int             @id @default(autoincrement())
   name          String          @unique @db.VarChar(50)
@@ -117,18 +120,19 @@ model CommunityTag {
 }
 
 model Event {
-  id            Int         @id @default(autoincrement())
-  title         String      @unique @db.VarChar(50)
-  description   String      @db.VarChar(255)
-  startsAt      DateTime    @db.Date
-  endsAt        DateTime    @db.Date
-  address       String      @db.VarChar(255)
-  createdAt     DateTime    @default(now())
-  editStatus    Boolean     @db.Boolean @default(false)
-  communityId   Int
-  community     Community   @relation(fields: [communityId], references: [id])
-  creatorId     Int
-  creator       Moderator   @relation(fields: [creatorId], references: [id])
+  id                  Int         @id @default(autoincrement())
+  title               String      @unique @db.VarChar(50)
+  description         String      @db.VarChar(255)
+  startsAt            DateTime    @db.Date
+  endsAt              DateTime    @db.Date
+  address             String      @db.VarChar(255)
+  createdAt           DateTime    @default(now())
+  editStatus          Boolean     @db.Boolean @default(false)
+  communityId         Int
+  community           Community   @relation(fields: [communityId], references: [id])
+  creatorUserId       Int
+  creatorCommunityId  Int
+  creator             Moderator   @relation(fields: [creatorUserId, creatorCommunityId], references: [userId, communityId])
 }
 
 model Post {

@@ -1,5 +1,6 @@
 
 import { CommunityRepository } from "@/repositories/community.repository";
+import { ModeratorService } from "./moderator.service";
 
 export class CommunityService {
   static async register(data: {
@@ -9,14 +10,16 @@ export class CommunityService {
     header: string,
     ageRestriction: boolean,
     creatorId: number
-
   }) {
     const existing = await CommunityRepository.findByName(data.name)
     if (existing) {
       return null
     }
-    return await CommunityRepository.create(data);
+    const community = await CommunityRepository.create(data);
+    await ModeratorService.assignModerator(data.creatorId, community.id, "System")
+    return community;
   }
+
   static async joinCommunity(userId: number, communityId: number) {
     const existing = await CommunityRepository.findMember(userId, communityId)
     if (existing) {
@@ -29,6 +32,10 @@ export class CommunityService {
     if (await CommunityRepository.isCreator(userId, communityId)) {
       throw new Error("Creator cannot leave community");
     }
-    return await CommunityRepository.deleteMember(userId, communityId);
+    const existing = await CommunityRepository.findMember(userId, communityId)
+    if (existing) {
+      return await CommunityRepository.deleteMember(userId, communityId);
+    }
+    throw new Error("Already a member");
   }
 }

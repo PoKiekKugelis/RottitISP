@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function CreateCommunityPage() {
   const router = useRouter();
@@ -39,6 +40,8 @@ export default function CreateCommunityPage() {
         headers: { "Content-Type": "application/json" }
       })
       const result = await response.json()
+      console.log(result)
+
       if (!response.ok) {
         console.log(response)
         setError(result.error)
