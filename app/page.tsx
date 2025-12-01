@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import PostFeed from "@/components/PostFeed";
 import { prisma } from "@/lib/prisma";
 import SideBar from "@/components/SideBar";
-import { User, UserSchema } from "@/models/user/schemas/user.schema";
+import { CreateUser } from "@/models/user/schemas/user.schema";
 
 async function testDB() {
   // This function is purely to test out that DB queries work
@@ -20,7 +20,7 @@ async function testDB() {
 testDB()
 
 // To test out Zod, you can change the attribute values as you see fit
-const user: User = {
+const user = {
   id: 1,
   loginName: "testBirthDate2",
   email: "testBirthDate2@gmail.com",
@@ -36,10 +36,10 @@ const user: User = {
 };
 
 //This is purely to test out if we can create an instance of the given object in DB table User
-async function createUser(userData: User) {
-  
+async function createUser(userData: any) {
+
   console.log("\n ZOD test\n");
-  const result = UserSchema.safeParse(user);
+  const result = CreateUser.safeParse(user);
   if (!result.success) {
     console.log(result.error);   // ZodError instance
   } else {
@@ -57,16 +57,7 @@ async function createUser(userData: User) {
 
     else {
       await prisma.user.create({
-        data: {
-          loginName: userData.loginName,
-          email: userData.email,
-          password: userData.password,
-          avatar: userData.avatar,
-          country: userData.country,
-          username: userData.username,
-          bio: userData.bio,
-          birthdate: userData.birthdate
-        },
+        data: result.data
       });
     }
   }

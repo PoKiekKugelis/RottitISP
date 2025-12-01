@@ -26,12 +26,12 @@ model User {
   loginName            String             @unique @db.VarChar(30)
   email                String             @unique @db.VarChar(50)
   password             String             @db.VarChar(30)
-  avatar               String             @db.VarChar(255)
+  avatar               String             @db.VarChar(255) @default("")
   country              String             @db.VarChar(50)
   createdAt            DateTime           @db.Date @default(now())
   username             String             @unique @db.VarChar(30)
   karma                Int                @default(0)
-  bio                  String             @db.VarChar(255)
+  bio                  String             @db.VarChar(255) @default("")
   birthdate            DateTime           @db.Date
   status               Boolean            @db.Boolean @default(false)
   badges               UserBadge[]
@@ -188,5 +188,6 @@ model File {
 
 model Administrator {
   id          Int         @id
+  user        User        @relation(fields: [id], references: [id]) // man atrodo čia reikia kažkaip sujungti su user, tdl pridėjau
   assignedAt  DateTime    @db.Date @default(now())
 }
