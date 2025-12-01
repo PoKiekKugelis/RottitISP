@@ -25,7 +25,7 @@ model User {
   id                   Int                @id @default(autoincrement())
   loginName            String             @unique @db.VarChar(30)
   email                String             @unique @db.VarChar(50)
-  password             String             @db.VarChar(30)
+  password             String             @db.VarChar(60)
   avatar               String             @db.VarChar(255) @default("")
   country              String             @db.VarChar(50)
   createdAt            DateTime           @db.Date @default(now())

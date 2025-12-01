@@ -6,14 +6,38 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation"
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const router = useRouter();
+  const [loginName, setLoginName] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login:", { email, password }); // čia prisijungimo logika, bet gal ir darysim kažkokį valdiklį idk
+    setError("");
+    setIsLoading(true);
+    try {
+      const result = await signIn("credentials", {
+        loginName: loginName,
+        password: password,
+        redirect: false,
+      })
+      if (result?.error) {
+        setError("Invalid credentials")
+        return;
+      } else if (result?.ok) {
+        router.push("/")
+      }
+    } catch (error: any) {
+      console.error(error)
+    }
+    finally {
+      setIsLoading(false)
+    }
   };
 
   return (
@@ -30,16 +54,17 @@ export default function Login() {
             <CardTitle className="text-2xl">Welcome back</CardTitle>
             <CardDescription>Sign in to your account to continue</CardDescription>
           </CardHeader>
+          {error && (<div className="text-red-500 text-sm text-center">{error}</div>)}
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="loginName">Login name</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name="loginName"
+                  type="loginName"
+                  placeholder="login name"
+                  value={loginName}
+                  onChange={(e) => setLoginName(e.target.value)}
                   required
                 />
               </div>
@@ -59,14 +84,14 @@ export default function Login() {
               </div>
 
               <Button type="submit" className="w-full">
-                Log In
+                {isLoading ? "Loading..." : "Sign up"}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm">
               Don't have an account? {" "}
               <Link href="/register" className="text-primary hover:underline font-medium">
-                Sign Up
+                Sign up
               </Link>
             </div>
           </CardContent>
