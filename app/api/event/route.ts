@@ -30,7 +30,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ communi
                 { status: 422 }
             );
         }
-        const event = await EventService.create({ ...validationResult.data, communityId:communityid, creatorId: parseInt(session.user.id) });
+        const event = await EventService.create({ ...validationResult.data, communityId:communityid, creatorUserId: parseInt(session.user.id), creatorCommunityId: communityid});
         return Response.json(event, { status: 201 });
     }
     catch (error: any) {

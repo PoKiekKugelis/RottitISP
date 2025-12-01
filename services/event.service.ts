@@ -9,7 +9,8 @@ export class EventService {
         endsAt: Date,
         address: string,
         communityId: number,
-        creatorId: number
+        creatorUserId: number,
+        creatorCommunityId: number
     }) {
         await EventRepository.create(data);
     }

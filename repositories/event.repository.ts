@@ -21,7 +21,7 @@ export class EventRepository {
   }
   static async findAllByCreator(creatorId: number) {
     return await prisma.event.findMany({
-        where: {creatorId: creatorId}
+        where: {creatorUserId: creatorId}
     });
   }
   static async update(id: number, data: any) {
@@ -39,6 +39,6 @@ export class EventRepository {
     const event = await prisma.event.findUnique({
       where: { id: eventId }
     });
-    return event?.creatorId === userId
+    return event?.creatorUserId === userId
   }
 }
