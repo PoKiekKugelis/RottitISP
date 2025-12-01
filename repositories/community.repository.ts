@@ -30,5 +30,44 @@ export class CommunityRepository {
       where: { name: title }
     })
   }
+  static async findMember(userId: number, communityId: number) {
+    return await prisma.communityMember.findUnique({
+      where: {
+        communityId_userId: { communityId, userId }
+      }
+    });
+  }
+  static async createMember(userId: number, communityId: number) {
+    return await prisma.communityMember.create({
+      data: { userId, communityId }
+    });
+  }
+  static async isCreator(userId: number, communityId: number) {
+    const community = await prisma.community.findUnique({
+      where: { id: communityId }
+    });
+    return community?.creatorId === userId
+  }
+  static async deleteMember(userId: number, communityId: number) {
+    return await prisma.communityMember.delete({
+      where: {
+        communityId_userId: { communityId, userId }
+      }
+    });
+  }
+  static async getMembers(communityId: number) {
+    return await prisma.communityMember.findMany({
+      where: { communityId },
+      include: { user: true }
+    });
+  }
 
+  static async isMember(userId: number, communityId: number) {
+    const member = await prisma.communityMember.findUnique({
+      where: {
+        communityId_userId: { communityId, userId }
+      }
+    });
+    return !!member;
+  }
 }
