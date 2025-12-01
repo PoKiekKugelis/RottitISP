@@ -188,6 +188,5 @@ model File {
 
 model Administrator {
   id          Int         @id
-  user        User        @relation(fields: [id], references: [id]) // man atrodo čia reikia kažkaip sujungti su user, tdl pridėjau
   assignedAt  DateTime    @db.Date @default(now())
 }
