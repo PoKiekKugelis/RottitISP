@@ -32,7 +32,7 @@ export default function Header() {
           <Button asChild>
             <Link href="/register">Sign Up</Link>
           </Button>
-          <Link href="/profile"><AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack}/></Link>
+          <Link href="/profile"><AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"}/></Link>
         </div>
       </div>
     </header>

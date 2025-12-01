@@ -7,19 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import AvatarImg from "@/components/Avatar";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 
 export default function Profile() {
   const [username, setUsername] = useState("Nickas");
   const [karmaPoints, setKarmaPoints] = useState(1000);
-  const [badges, setBadges] = useState(["Vienas","Du","Trys"]);
+  const [badges, setBadges] = useState(["1", "2", "3", "4", "5", "6"]);
+  const [selectedBadge, setSelectedBadge] = useState<string>("");
 
   const imageSrc = "https://github.com/shadcn.png";
   const imageAlt = "@shadcn";
@@ -27,7 +26,7 @@ export default function Profile() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href='/profile';
+    //window.location.href='/profile';
   };
 
   return (
@@ -42,40 +41,45 @@ export default function Profile() {
         <Card>
           <CardHeader>
             <div className="flex flex-row items-left justify-left w-1/2 gap-x-5">
-                <CardTitle className="text-2xl">{username}</CardTitle>
-                <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack}/>
+              <CardTitle className="text-2xl">{username}</CardTitle>
+              <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-left text-lg">
-            <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="flex flex-row items-left justify-left w-1/2 gap-x-3">
-                    <h1>Karma points:</h1>
-                    <p>{karmaPoints}</p>
+                  <h1>Karma points:</h1>
+                  <p>{karmaPoints}</p>
                 </div>
-              <div className="space-y-2">
-                <Label htmlFor="badges">Choose badges</Label>
-                <Select>
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Choose a badge" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Badges</SelectLabel>
-                            <SelectItem value={badges[0]}>{badges[0]}</SelectItem>
-                            <SelectItem value={badges[1]}>{badges[1]}</SelectItem>
-                            <SelectItem value={badges[2]}>{badges[2]}</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-              </div>
-
-              <Button type="submit" className="w-full">
-                Save
-              </Button>
-            </form>
-            <br></br>
-            <Link href="/profile"><Button>Cancel</Button></Link>
+                <div className="space-y-2">
+                  <Label htmlFor="badges">Choose badges</Label>
+                  {/*Shows all badges*/}
+                  <Carousel
+                    opts={{
+                      align: "start",
+                    }}
+                    className="w-full max-w-sm"
+                  >
+                    <CarouselContent>
+                      {badges.map((badge, index) => (
+                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/5">
+                          <div className="p-1 aspect-square">
+                            <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-15"}/>
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious />
+                    <CarouselNext />
+                  </Carousel>
+                </div>
+                <Button type="submit" className="w-full">
+                  Save
+                </Button>
+              </form>
+              <br></br>
+              <Link href="/profile"><Button>Cancel</Button></Link>
             </div>
           </CardContent>
         </Card>

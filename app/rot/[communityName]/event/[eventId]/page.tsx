@@ -42,7 +42,7 @@ export default function EventPage({ params }: {
         <Card>
           <CardHeader>
             <div className="flex flex-row items-left justify-left w-1/2 gap-x-2">
-              <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} />
+              <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} />
               <CardTitle className="text-md">{username}</CardTitle>
               <Link href={`/rot/${communityName}`}>
                 <Badge variant="outline" className="text-xs mb-1 hover:bg-background cursor-pointer">

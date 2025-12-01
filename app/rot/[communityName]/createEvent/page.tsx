@@ -8,12 +8,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DateTimePicker } from "@/components/DateTimePicker";
+import { use } from "react";
 import { prisma } from "@/lib/prisma";
 import { z } from 'zod';
 import { CreateEvent, CreateEventSchema } from "@/models/event/schemas/event.schema";
 
-export default function createEvent() {
-  const community = "programming";
+export default function createEvent({ params }: {
+  params: Promise<{ communityName: string }>
+}) {
+  const { communityName } = use(params);
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [startTime, setStartTime] = useState<string>("");
@@ -22,7 +25,7 @@ export default function createEvent() {
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
 
-  const communityId = 2; //Get from URL
+  const communityId = 2; //Get from database by the community name in URL
   const creatorId = 1; //Get from session?
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -139,7 +142,7 @@ export default function createEvent() {
                   </Button>
                 </form>
                 <br></br>
-                <Link href={`/rot/${community}`}><Button>Cancel</Button></Link>
+                <Link href={`/rot/${communityName}`}><Button>Cancel</Button></Link>
               </div>
             </CardContent>
           </Card>

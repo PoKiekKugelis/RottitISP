@@ -8,16 +8,18 @@ interface AvatarProps {
   src: string;
   alt: string;
   fallBack: string;
+  size: string;
 }
 
 export default function AvatarImg({
   src,
   alt,
-  fallBack
+  fallBack,
+  size
 }:AvatarProps) {
   return (
     <div className="flex flex-row flex-wrap items-center gap-12">
-      <Avatar>
+      <Avatar className={size}>
         <AvatarImage src={src} alt={alt} />
         <AvatarFallback>{fallBack}</AvatarFallback>
       </Avatar>

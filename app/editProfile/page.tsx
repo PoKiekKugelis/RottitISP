@@ -51,7 +51,7 @@ export default function Profile() {
           <CardHeader>
             <div className="flex flex-row items-left justify-left w-1/2 gap-x-5">
               <CardTitle className="text-2xl">{currentUsername}</CardTitle>
-              <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} />
+              <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} />
             </div>
           </CardHeader>
           <CardContent>
