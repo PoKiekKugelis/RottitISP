@@ -15,7 +15,7 @@ export async function POST(
       { error: "Invalid community ID" }, { status: 400 });
   }
 
-  const community = CommunityRepository.findOne(communityId);
+  const community = await CommunityRepository.findOne(communityId);
   if (!community) {
     return Response.json({ error: "Community not found" }, { status: 404 })
   }
@@ -23,10 +23,10 @@ export async function POST(
 
   try {
     await CommunityService.joinCommunity(userId, communityId);
-    return Response.json({ success: true }, { status: 201 });
-  } catch (error) {
+    return Response.json({ message: "Successfully added member" }, { status: 201 });
+  } catch (error: any) {
     return Response.json(
-      { error: (error as Error).message }, { status: 400 }
+      { error: error.message }, { status: 400 }
     );
   }
 }
@@ -52,10 +52,10 @@ export async function DELETE(
   }
   try {
     await CommunityService.leaveCommunity(userId, communityId);
-    return Response.json({ success: true });
-  } catch (error) {
+    return Response.json({ message: "Member deleted successfully" }, { status: 200 });
+  } catch (error: any) {
     return Response.json(
-      { error: (error as Error).message }, { status: 400 }
+      { error: error.message }, { status: 400 }
     );
   }
 }

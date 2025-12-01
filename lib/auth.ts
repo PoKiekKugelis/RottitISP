@@ -25,7 +25,7 @@ export async function isAdmin(userId: number) {
 export async function isModerator(userId: number, communityId: number) {
   const moderator = await prisma.moderator.findFirst({
     where: {
-      id: userId,
+      userId: userId,
       communityId: communityId
     }
   });

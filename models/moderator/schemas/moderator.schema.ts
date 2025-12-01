@@ -1,18 +1,18 @@
 import { z } from 'zod';
 
 export const ModeratorSchema = z.object({
-    id: z.number(),
-    assignedAt: z.date(),
-    assignedBy: z.string().max(30),
-    communityId: z.number()
+  id: z.number(),
+  assignedAt: z.date(),
+  assignedBy: z.string().max(30),
+  communityId: z.number()
 })
 
-export const CreateModeratorSchema = z.object({
-    id: z.number(),
-    assignedBy: z.string().max(30),
-    communityId: z.number()
+export const CreateModerator = z.object({
+  id: z.number(),
+  assignedBy: z.string().max(30),
+  communityId: z.number()
 });
 
 // Type inference
 export type Moderator = z.infer<typeof ModeratorSchema>;
-export type CreateModerator = z.infer<typeof CreateModeratorSchema>;
+export type CreateModerator = z.infer<typeof CreateModerator>;
