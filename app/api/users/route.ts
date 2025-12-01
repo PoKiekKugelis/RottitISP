@@ -1,6 +1,7 @@
 import { CreateUser } from "@/models/user/schemas/user.schema";
 import { UserService } from "@/services/user.service"
 import { UserRepository } from "@/repositories/user.repository";
+import bcrypt from "bcryptjs";
 
 export async function GET(req: Request) {
   try {
@@ -16,13 +17,16 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const validationResult = CreateUser.safeParse(body);
-    console.log(body)
+
     if (!validationResult.success) {
       return Response.json(
         { error: "Invalid input", details: validationResult.error.issues },
         { status: 422 }
       );
     }
+    const userData = validationResult.data;
+    userData.password = await bcrypt.hash(validationResult.data.password, 10)
+
     const user = await UserService.register(validationResult.data);
     if (user == null) {
       return Response.json({ error: "User with this login name, username or email already exists" }, { status: 409 })
