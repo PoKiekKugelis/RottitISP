@@ -15,5 +15,6 @@ export interface Event {
   community?: Community ;
   communityId: number ;
   creator?: Moderator ;
-  creatorId: number ;
+  creatorUserId: number ;
+  creatorCommunityId: number ;
 }

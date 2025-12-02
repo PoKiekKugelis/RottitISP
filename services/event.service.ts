@@ -5,12 +5,13 @@ export class EventService {
     static async create(data: {
         title: string,
         description: string,
-        startsAt: Date,
-        endsAt: Date,
+        startsAt: string,
+        endsAt: string,
         address: string,
         communityId: number,
-        creatorId: number
+        creatorUserId: number,
+        creatorCommunityId: number
     }) {
-        await EventRepository.create(data);
+        return await EventRepository.create(data);
     }
 }
