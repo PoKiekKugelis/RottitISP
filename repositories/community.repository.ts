@@ -8,9 +8,15 @@ export class CommunityRepository {
   }
   static async findOne(id: number) {
     return await prisma.community.findUnique({
-      where: { id: id }
+      where: { id: id },
+      include: {
+        _count: {
+          select: { members: true }
+        }
+      }
     });
   }
+
   static async findAll() {
     return await prisma.community.findMany();
   }
@@ -69,5 +75,20 @@ export class CommunityRepository {
       }
     });
     return !!member;
+  }
+  static async findByMembers(amount: number) {
+    return await prisma.community.findMany({
+      take: amount,
+      orderBy: {
+        members: {
+          _count: 'desc'
+        }
+      },
+      include: {
+        _count: {
+          select: { members: true }
+        }
+      }
+    })
   }
 }

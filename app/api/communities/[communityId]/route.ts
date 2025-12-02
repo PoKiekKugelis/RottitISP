@@ -57,12 +57,12 @@ export async function DELETE(
       return Response.json(
         { error: "Invalid community ID" }, { status: 400 });
     }
-
     const community = CommunityRepository.findOne(id);
     if (!community) {
       return Response.json({ error: "Community not found" }, { status: 404 })
     }
-    CommunityRepository.delete(id);
+    const result = await CommunityRepository.delete(id);
+    console.log(result)
 
     return Response.json({ message: "Community deleted successfully" }, { status: 200 });
   } catch (error: any) {

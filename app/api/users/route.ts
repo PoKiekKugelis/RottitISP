@@ -1,13 +1,12 @@
 import { CreateUser } from "@/models/user/schemas/user.schema";
 import { UserService } from "@/services/user.service"
 import { UserRepository } from "@/repositories/user.repository";
-import bcrypt from "bcryptjs";
 import { requireAdmin } from "@/lib/auth"
 
 export async function GET(req: Request) {
   try {
-    const session = await requireAdmin();
-    if (session instanceof Response) return session
+    // const session = await requireAdmin();
+    // if (session instanceof Response) return session
     const users = await UserRepository.findAll();
     return Response.json(users, { status: 200 });
   }
@@ -27,8 +26,6 @@ export async function POST(req: Request) {
         { status: 422 }
       );
     }
-    const userData = validationResult.data;
-    userData.password = await bcrypt.hash(validationResult.data.password, 10)
 
     const user = await UserService.register(validationResult.data);
     if (user == null) {

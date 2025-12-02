@@ -21,10 +21,9 @@ export async function POST(
     return Response.json({ error: "Community not found" }, { status: 404 })
   }
 
-  // if (community?.creatorId !== currentUserId) {
+  // if (community?.creatorId !== session.user.id) {
   //   return Response.json(
-  //     { error: "Only creator can assign moderators" },
-  //     { status: 403 }
+  //     { error: "Only creator can assign moderators" }, { status: 403 }
   //   );
   // }
 
@@ -43,7 +42,6 @@ export async function POST(
       id,
       session.user.username
     );
-    console.log("getting here")
     return Response.json({ message: "Moderator created successfully" }, { status: 201 });
   } catch (error: any) {
     return Response.json({ error: error.message }, { status: 400 }

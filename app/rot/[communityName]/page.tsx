@@ -1,17 +1,19 @@
-"use client";
-
 import Header from "@/components/Header";
 import PostFeed from "@/components/PostFeed";
 import EventFeed from "@/components/EventFeed";
 import SideBar from "@/components/SideBar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button"
-import { use } from "react";
+import { CommunityRepository } from "@/repositories/community.repository";
 
-export default function CommunityPage({ params }: {
+export default async function CommunityPage({ params }: {
   params: Promise<{ communityName: string }>
 }) {
-  const { communityName } = use(params);
+  const { communityName } = await params
+  const community = await CommunityRepository.findByName(communityName);
+  if (!community) {
+    return <div>Community not found</div>;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -28,7 +30,7 @@ export default function CommunityPage({ params }: {
           <PostFeed communityName={communityName} />
         </div>
         <aside>
-          <SideBar activeCommunity={communityName} />
+          <SideBar activeCommunity={community} />
         </aside>
       </main>
     </div>

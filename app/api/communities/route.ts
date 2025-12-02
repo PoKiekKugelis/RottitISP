@@ -4,6 +4,9 @@ import { CommunityRepository } from "@/repositories/community.repository";
 import { requireAuth } from "@/lib/auth"
 
 export async function GET(req: Request) {
+  // const { searchParams } = new URL(req.url);
+  // const name = searchParams.get("name");
+  // const top = searchParams.get("top");
   try {
     const communities = await CommunityRepository.findAll();
     return Response.json(communities, { status: 200 });

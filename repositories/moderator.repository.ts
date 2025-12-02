@@ -10,8 +10,13 @@ export class ModeratorRepository {
       }
     });
   }
+  static async delete(userId: number, commmunityId: number) {
+    return await prisma.moderator.delete({
+      where: { userId_communityId: { userId: userId, communityId: commmunityId } }
+    })
+  }
   static async findAll(communityId: number) {
-    const moderators = await prisma.moderator.findMany({
+    return await prisma.moderator.findMany({
       where: { communityId },
       include: {
         user: {
@@ -23,7 +28,5 @@ export class ModeratorRepository {
         }
       }
     });
-    console.log('Moderators:', moderators);
-    return moderators
   }
 }

@@ -3,6 +3,8 @@ import PostFeed from "@/components/PostFeed";
 import { prisma } from "@/lib/prisma";
 import SideBar from "@/components/SideBar";
 import { CreateUser } from "@/models/user/schemas/user.schema";
+import { UserRepository } from "@/repositories/user.repository";
+import bcrypt from "bcryptjs";
 
 async function testDB() {
   // This function is purely to test out that DB queries work
@@ -22,16 +24,16 @@ testDB()
 // To test out Zod, you can change the attribute values as you see fit
 const user = {
   id: 1,
-  loginName: "testBirthDate2",
-  email: "testBirthDate2@gmail.com",
-  password: "pass",
+  loginName: "admin",
+  email: "admin@gmail.com",
+  password: "admin",
   avatar: "",
   country: "",
   createdAt: new Date(),
-  username: "testBirthDate2",
+  username: "admin",
   karma: 0,
-  bio: "I am testBirthDate2",
-  birthdate: new Date("2020-1-2"),
+  bio: "I am admin",
+  birthdate: new Date("2020-01-02").toJSON(),
   status: false
 };
 
@@ -39,7 +41,7 @@ const user = {
 async function createUser(userData: any) {
 
   console.log("\n ZOD test\n");
-  const result = CreateUser.safeParse(user);
+  const result = CreateUser.safeParse(userData);
   if (!result.success) {
     console.log(result.error);   // ZodError instance
   } else {
@@ -56,9 +58,10 @@ async function createUser(userData: any) {
     }
 
     else {
-      await prisma.user.create({
-        data: result.data
-      });
+      UserRepository.create(result.data)
+      await prisma.administrator.create({
+        data: { id: userData.id }
+      })
     }
   }
 }
@@ -70,7 +73,6 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="max-w-7xl mx-auto px-4 py-6 flex gap-6">
-        {/* Main stuff */}
         <div className="flex-1">
           <PostFeed />
         </div>
