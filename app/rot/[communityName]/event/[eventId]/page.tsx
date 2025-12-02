@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Header from "@/components/Header";
 import SideBar from "@/components/SideBar";
 import { use } from "react";
@@ -23,12 +24,57 @@ export default function EventPage({ params }: {
   const [username, setUsername] = useState("admin");
   const [creationDate, setCreationDate] = useState("2025-11-02");
   const [title, setTitle] = useState("Susitikimas!");
-  const [startDate, setStartDate] = useState("2025-11-18 at 18:00");
+  const [startDate, setStartDate] = useState("2025-11-18");
   const [endDate, setEndDate] = useState("2025-11-18 at 22:00");
   const [location, setLocation] = useState("Lithuania, Kaunas, studentų g. 67");
   const [description, setDescription] = useState("Sveiki, norėjau pranešti, kad vyksta bendruomenės susitikimas. " +
     "Bus maisto ir gėrimų bei visokių įdomybių. Kviečiami visi!");
   const [editStatus, setEditStatus] = useState(true);
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await fetch(`/api/events/${eventId}?eventId=${eventId}`, {
+          method: 'GET',
+          headers: { "Content-Type": "application/json" }
+        })
+        const result = await response.json()
+        console.log(result)
+
+        if (!response.ok) {
+          console.log(response);
+          return;
+        }
+
+        const moderatorId = result?.creatorUserId;
+        const userResponse = await fetch(`/api/users/${moderatorId}?userId=${moderatorId}`, {
+          method: 'GET',
+          headers: { "Content-Type": "application/json" }
+        })
+        const userResult = await userResponse.json()
+        console.log(userResult)
+
+        if (!userResponse.ok) {
+          console.log(userResponse);
+          return;
+        }
+
+        setUsername(userResult?.username);
+        setCreationDate(new Date(result?.createdAt).toLocaleString("lt-LT", {year:"numeric", month:"numeric", day:"numeric"}));
+        setTitle(result?.title);
+        setStartDate(new Date(result?.startsAt).toLocaleString("lt-LT", {year:"numeric", month:"numeric", day:"numeric", hour:"numeric", minute:"numeric"}));
+        setEndDate(new Date(result?.endsAt).toLocaleString("lt-LT", {year:"numeric", month:"numeric", day:"numeric", hour:"numeric", minute:"numeric"}));
+        setLocation(result?.address);
+        setDescription(result?.description);
+        setEditStatus(result?.editStatus);
+
+      } catch (error: any) {
+        console.error(error);
+      }
+    };
+
+    loadData();
+  }), [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -56,7 +102,7 @@ export default function EventPage({ params }: {
             <CardDescription>
               <div className="flex gap-2 items-left justify-left">
                 <p>Created at {creationDate}</p>
-                <p>{editStatus? "•Edited": ""}</p>
+                <p>{editStatus ? "•Edited" : ""}</p>
               </div>
             </CardDescription>
             <div>

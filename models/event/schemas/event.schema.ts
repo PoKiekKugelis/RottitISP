@@ -3,16 +3,16 @@ import { z } from 'zod';
 export const CreateEvent = z.object({
     title: z.string().max(50),
     description: z.string().max(255),
-    startsAt: z.date(),
-    endsAt: z.date(),
+    startsAt: z.iso.datetime(),
+    endsAt: z.iso.datetime(),
     address: z.string().max(255)   
 });
 
 export const UpdateEvent = z.object({
     title: z.string().max(50),
     description: z.string().max(255),
-    startsAt: z.date(),
-    endsAt: z.date(),
+    startsAt: z.iso.datetime(),
+    endsAt: z.iso.datetime(),
     address: z.string().max(255)
 });
 

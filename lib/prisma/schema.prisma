@@ -123,10 +123,10 @@ model Event {
   id                  Int         @id @default(autoincrement())
   title               String      @db.VarChar(50)
   description         String      @db.VarChar(255)
-  startsAt            DateTime    @db.Date
-  endsAt              DateTime    @db.Date
+  startsAt            DateTime
+  endsAt              DateTime
   address             String      @db.VarChar(255)
-  createdAt           DateTime    @default(now())
+  createdAt           DateTime    @db.Date @default(now())
   editStatus          Boolean     @db.Boolean @default(false)
   communityId         Int
   community           Community   @relation(fields: [communityId], references: [id])

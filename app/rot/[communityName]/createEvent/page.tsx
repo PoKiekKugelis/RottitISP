@@ -9,12 +9,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DateTimePicker } from "@/components/DateTimePicker";
 import { use } from "react";
-import { z } from 'zod';
-import { CreateEvent } from "@/models/event/schemas/event.schema";
+import { useRouter } from "next/navigation";
 
 export default function createEvent({ params }: {
   params: Promise<{ communityName: string }>
 }) {
+  const router = useRouter();
   const { communityName } = use(params);
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState<Date>(new Date());
@@ -23,58 +23,41 @@ export default function createEvent({ params }: {
   const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
-
-  const communityId = 2; //Get from database by the community name in URL
-  const creatorId = 1; //Get from session?
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
-    const dateString = startDate.toLocaleDateString("lt-LT") + "T" + startTime;
-    console.log("The date and time is: " + dateString);
-
-    // Creates possible event entry with the given data
-    /*
-    const event: CreateEvent = {
-      title: title,
-      description: description,
-      startsAt: startDate,
-      endsAt: endDate,
-      address: location,
-      communityId: communityId,
-      creatorId: creatorId
-    }
-    */
-
-    // Creates entry in the event table with the given data if data is valid
-    //await createEventEntry(event);
-    //window.location.href = '../programming/event/1';
-  };
-
-  const createEventEntry = async (eventData: CreateEvent) => {
-    // Checks if the attribute values are valid
     try {
-      CreateEvent.parse(eventData);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        console.log(error.issues);
+      const data = {
+        title,
+        description,
+        startsAt: new Date(startDate.toLocaleString("lt-LT", {year:"numeric", month:"numeric", day:"numeric"})+"T"+startTime+":00").toISOString(),
+        endsAt: new Date(endDate.toLocaleString("lt-LT", {year:"numeric", month:"numeric", day:"numeric"})+"T"+endTime+":00").toISOString(),
+        address: location
       }
-    }
+      const response = await fetch(`/api/events?communityName=${communityName}`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" }
+      })
+      const result = await response.json();
+      console.log(result);
 
-    console.log("\n\nThe start date is:" + eventData.startsAt + "\n\n");
-    /*
-    // Creates entry in the event table with the given data
-    await prisma.event.create({
-      data: {
-        title: eventData.title,
-        description: eventData.description,
-        startsAt: eventData.startsAt,
-        endsAt: eventData.endsAt,
-        address: eventData.address,
-        communityId: eventData.communityId,
-        creatorId: eventData.creatorId
+      if (!response.ok) {
+        console.log(response);
+        setError(result.error);
+        return;
       }
-    });*/
+      router.push(`/rot/${communityName}/event/${result.id}`);
+    } catch (error: any) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -87,6 +70,9 @@ export default function createEvent({ params }: {
         </div>
         <div className="min-w-xl max-w-xl flex items-center justify-center">
           <Card className="min-w-xl max-w-xl">
+            {error && (
+              <div className="text-red-500 text-sm text-center">{error}</div>
+            )}
             <CardContent>
               <div className="text-left text-xl">
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -139,7 +125,7 @@ export default function createEvent({ params }: {
                   </div>
 
                   <Button type="submit" className="w-full">
-                    Save
+                    {isLoading ? "Loading..." : "Save"}
                   </Button>
                 </form>
                 <br></br>
