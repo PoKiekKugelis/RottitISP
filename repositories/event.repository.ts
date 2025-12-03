@@ -8,7 +8,7 @@ export class EventRepository {
   }
   static async findOne(id: number) {
     return await prisma.event.findUnique({
-      where: { id: id }
+      where: { id }
     });
   }
   static async findAll() {
@@ -16,12 +16,12 @@ export class EventRepository {
   }
   static async findAllByCommunity(communityId: number) {
     return await prisma.event.findMany({
-        where: { communityId: communityId}
+      where: { communityId: communityId }
     });
   }
   static async findAllByCreator(creatorId: number) {
     return await prisma.event.findMany({
-        where: {creatorUserId: creatorId}
+      where: { creatorUserId: creatorId }
     });
   }
   static async update(id: number, data: any) {

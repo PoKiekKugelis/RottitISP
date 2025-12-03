@@ -4,10 +4,18 @@ import { CommunityRepository } from "@/repositories/community.repository";
 import { requireAuth } from "@/lib/auth"
 
 export async function GET(req: Request) {
-  // const { searchParams } = new URL(req.url);
-  // const name = searchParams.get("name");
-  // const top = searchParams.get("top");
+  const { searchParams } = new URL(req.url);
+  const name = searchParams.get("name");
+  const top = searchParams.get("top");
   try {
+    if (top) {
+      const communities = await CommunityRepository.findByMembers(parseInt(top));
+      return Response.json(communities, { status: 200 });
+    }
+    if (name) {
+      const communities = await CommunityRepository.findByName(name)
+      return Response.json(communities, { status: 200 });
+    }
     const communities = await CommunityRepository.findAll();
     return Response.json(communities, { status: 200 });
   }

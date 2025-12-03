@@ -162,14 +162,11 @@ model Comment {
   post           Post        @relation(fields: [postId], references: [id])
   creatorId      Int
   creator        User        @relation(fields: [creatorId], references: [id])
-  replies        Reply[]
+  parentId       Int?
+  parent         Comment?     @relation("CommentToComment", fields: [parentId], references: [id])
+  replies        Comment[]    @relation("CommentToComment")
 }
 
-model Reply {
-  commentId    Int       @id
-  parentId     Int
-  parent       Comment   @relation(fields: [parentId], references: [id])
-}
 
 model Like {
   id          Int       @id @default(autoincrement())

@@ -62,7 +62,6 @@ export async function DELETE(
       return Response.json({ error: "Community not found" }, { status: 404 })
     }
     const result = await CommunityRepository.delete(id);
-    console.log(result)
 
     return Response.json({ message: "Community deleted successfully" }, { status: 200 });
   } catch (error: any) {

@@ -1,4 +1,3 @@
-
 import Header from "@/components/Header";
 import SideBar from "@/components/SideBar";
 import CreateCommunityForm from "@/components/CreateCommunityForm";

@@ -49,7 +49,7 @@ export function EditCommunityForm({ community }: EditCommunityProps) {
         console.log(result.error);
         return;
       }
-      router.push(`/rot/${community.name}`);
+      router.push(`/rot/${name}`);
     } catch (error: any) {
       console.log(error);
     } finally {
