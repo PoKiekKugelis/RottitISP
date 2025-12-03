@@ -10,6 +10,7 @@ export default async function CommunityPage({ params }: {
   params: Promise<{ communityName: string }>
 }) {
   const { communityName } = await params
+  console.log(communityName)
   const community = await CommunityRepository.findByName(communityName);
   if (!community) {
     return <div>Community not found</div>;
