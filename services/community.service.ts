@@ -36,6 +36,6 @@ export class CommunityService {
     if (existing) {
       return await CommunityRepository.deleteMember(userId, communityId);
     }
-    throw new Error("Already a member");
+    throw new Error("Already not a member");
   }
 }

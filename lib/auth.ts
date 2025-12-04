@@ -47,8 +47,7 @@ export async function requireAdmin() {
   const session = await requireAuth();
   if (session instanceof Response) return session;
 
-  const isAdminUser = await isAdmin(parseInt(session.user.id));
-  if (!isAdminUser) {
+  if (session.user.role != "ADMIN") {
     return Response.json(
       { error: "Forbidden - no permissions" },
       { status: 403 }
@@ -62,10 +61,9 @@ export async function requireModerator(communityId: number) {
   if (session instanceof Response) return session;
 
   const userId = parseInt(session.user.id);
-  const isAdminUser = await isAdmin(userId);
   const isModUser = await isModerator(userId, communityId);
 
-  if (!isAdminUser && !isModUser) {
+  if (!isModUser) {
     return Response.json(
       { error: "Forbidden - no permissions" },
       { status: 403 }

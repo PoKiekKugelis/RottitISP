@@ -19,8 +19,11 @@ export async function PUT(req: Request, { params }: { params: Promise<{ communit
   try {
     const { communityId } = await params;
     const id = parseInt(communityId);
-    const session = await requireModerator(id);
-    if (session instanceof Response) return session
+    let session = await requireModerator(id);
+    if (session instanceof Response) { // scuffed ah admin patikrinimas
+      session = await requireAdmin()
+      if (session instanceof Response) return session
+    }
 
     if (isNaN(id)) {
       return Response.json({ error: "Invalid community ID" }, { status: 400 })

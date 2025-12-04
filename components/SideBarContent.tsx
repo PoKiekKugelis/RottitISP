@@ -9,16 +9,21 @@ import { useState } from "react";
 import { use } from "react";
 import { Community } from "@/models/community/entities/community.entity";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react"
+import { CommunityMemberButton } from "./CommunityMemberButton";
 
 interface SideBarProps {
   activeCommunity?: Community;
   communities: Promise<(Community & { _count: { members: number } })[]>;
+  userCommunityRole: string;
 }
 
-export default function SideBarContent({ activeCommunity, communities }: SideBarProps) {
+export default function SideBarContent({ activeCommunity, communities, userCommunityRole }: SideBarProps) {
   const router = useRouter()
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isCollapsedCom, setIsCollapsedCom] = useState(false);
+  const session = useSession()
+  const globalRole = session.data?.user.role
 
   const allCommunities = use(communities);
 
@@ -82,26 +87,37 @@ export default function SideBarContent({ activeCommunity, communities }: SideBar
           <CardContent className="flex flex-col gap-2 pt-0">
             {activeCommunity ? (
               <>
-                <Link href={`/rot/${activeCommunity.name}/addPost`}>
+                {globalRole && userCommunityRole != "RANDOM" && (<Link href={`/rot/${activeCommunity.name}/addPost`}>
                   <Button className="w-full cursor-pointer">Add Post</Button>
                 </Link>
-                <Link href={`/rot/${activeCommunity.name}/createEvent`}>
-                  <Button className="w-full cursor-pointer">Create Event</Button>
-                </Link>
-                <Link href={`/rot/${activeCommunity.name}/edit`}>
-                  <Button className="w-full cursor-pointer">Edit Community</Button>
-                </Link>
-                <hr />
-                <DeletePopUp
-                  title="Delete Community"
-                  description={`Are you sure you want to delete rot/${activeCommunity.name}? This will permanently delete all posts, events, and members. This action cannot be undone.`}
-                  onConfirm={handleDelete}
-                  trigger={
-                    <Button variant="destructive" className="w-full cursor-pointer">
-                      Delete Community
-                    </Button>
-                  }
-                />
+                )}
+                {(userCommunityRole == "MODERATOR" || globalRole == "ADMIN") && (<>
+                  <Link href={`/rot/${activeCommunity.name}/createEvent`}>
+                    <Button className="w-full cursor-pointer">Create Event</Button>
+                  </Link>
+                  <Link href={`/rot/${activeCommunity.name}/edit`}>
+                    <Button className="w-full cursor-pointer">Edit Community</Button>
+                  </Link>
+                </>)}
+                <CommunityMemberButton
+                  communityId={activeCommunity.id}
+                  communityName={activeCommunity.name}
+                  isMember={userCommunityRole != "RANDOM"} />
+                {globalRole == "ADMIN" && (
+                  <>
+                    <hr />
+                    <DeletePopUp
+                      title="Delete Community"
+                      description={`Are you sure you want to delete rot/${activeCommunity.name}? This will permanently delete all posts, events, and members. This action cannot be undone.`}
+                      onConfirm={handleDelete}
+                      trigger={
+                        <Button variant="destructive" className="w-full cursor-pointer">
+                          Delete Community
+                        </Button>
+                      }
+                    />
+                  </>
+                )}
               </>
             ) : (
               <Link href="/community/create">

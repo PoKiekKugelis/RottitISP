@@ -5,6 +5,9 @@ import SideBar from "@/components/SideBar";
 import { CreateUser } from "@/models/user/schemas/user.schema";
 import { UserRepository } from "@/repositories/user.repository";
 import bcrypt from "bcryptjs";
+import { Community } from "@/models/community/entities/community.entity";
+import { CreateCommunity } from "@/models/community/schemas/community.schema";
+import { CommunityService } from "@/services/community.service";
 
 async function testDB() {
   // This function is purely to test out that DB queries work
@@ -22,8 +25,7 @@ async function testDB() {
 testDB()
 
 // To test out Zod, you can change the attribute values as you see fit
-const user = {
-  id: 1,
+const admin = {
   loginName: "admin",
   email: "admin@gmail.com",
   password: "admin",
@@ -36,6 +38,27 @@ const user = {
   birthdate: new Date("2020-01-02").toJSON(),
   status: false
 };
+const user = {
+  loginName: "user",
+  email: "user@gmail.com",
+  password: "user",
+  avatar: "",
+  country: "",
+  createdAt: new Date(),
+  username: "user",
+  karma: 0,
+  bio: "I am user",
+  birthdate: new Date("2020-01-02").toJSON(),
+  status: false
+};
+const community = {
+  name: "GamesOrBacon",
+  description: "Unlimited bacon but no games? Or... GAMES, unlimited games but no games?",
+  avatar: "",
+  header: "",
+  ageRestriction: false,
+  creatorId: 1
+}
 
 //This is purely to test out if we can create an instance of the given object in DB table User
 async function createUser(userData: any) {
@@ -65,8 +88,19 @@ async function createUser(userData: any) {
     }
   }
 }
+async function createCommunity(communityData: any) {
+  const result = CreateCommunity.safeParse(communityData);
+  if (!result.success) {
+    console.log(result.error);
+  } else {
+    console.log(result.data);
+    await CommunityService.register({ ...result.data, creatorId: communityData.creatorId })
+  }
+}
 
+createUser(admin);
 createUser(user);
+createCommunity(community)
 
 export default function Home() {
   return (

@@ -2,6 +2,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { isAdmin } from "@/lib/auth";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -29,11 +30,12 @@ export const authOptions: NextAuthOptions = {
         if (!isValid) {
           throw new Error("Invalid credentials")
         }
+        const role = await isAdmin(user.id) ? "ADMIN" : "USER"
 
         return {
           id: user.id.toString(),
-          email: user.email,
           username: user.username,
+          role: role
         };
       }
     })
@@ -49,12 +51,16 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.username = user.username;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.username = token.username as string;
+        session.user.role = token.role as string;
       }
       return session;
     }

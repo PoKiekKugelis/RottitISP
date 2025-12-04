@@ -1,4 +1,4 @@
-import { requireAdmin, requireModerator } from "@/lib/auth";
+import { requireAdmin, requireAuth, requireModerator } from "@/lib/auth";
 import { CommunityRepository } from "@/repositories/community.repository";
 import { CommunityService } from "@/services/community.service";
 
@@ -7,7 +7,7 @@ export async function POST(
   { params }: { params: { communityId: string } }
 ) {
   const communityId = parseInt(params.communityId);
-  const session = await requireModerator(communityId);
+  const session = await requireAuth();
   if (session instanceof Response) return session;
 
   if (isNaN(communityId)) {
@@ -35,7 +35,7 @@ export async function DELETE(
   req: Response,
   { params }: { params: { communityId: string } }
 ) {
-  const session = await requireAdmin();
+  const session = await requireAuth();
   if (session instanceof Response) return session;
 
   const communityId = parseInt(params.communityId);
