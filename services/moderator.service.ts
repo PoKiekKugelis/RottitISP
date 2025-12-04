@@ -1,7 +1,6 @@
-import { prisma } from "@/lib/prisma";
 import { CommunityRepository } from "@/repositories/community.repository";
-import { CommunityService } from "./community.service";
 import { ModeratorRepository } from "@/repositories/moderator.repository";
+import { isModerator } from "@/lib/auth";
 
 export class ModeratorService {
   static async assignModerator(
@@ -10,8 +9,10 @@ export class ModeratorService {
     assignedBy: string
   ) {
     const isMember = await CommunityRepository.isMember(userId, communityId);
-    if (!isMember) {
-      await CommunityService.joinCommunity(userId, communityId);
+    const isMod = await isModerator(userId, communityId)
+    console.log(isMod)
+    if (!isMember || isMod) {
+      return null
     }
     return await ModeratorRepository.create(userId, communityId, assignedBy);
   }

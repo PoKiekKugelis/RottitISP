@@ -43,7 +43,7 @@ export function CommunityMemberButton({
         return
       }
       setIsMember(!isMember);
-      router.refresh();
+      isMember ? router.push(`/`) : router.push(`/rot/${communityName}`);
     } catch (error: any) {
       console.error(error)
     }
@@ -58,7 +58,7 @@ export function CommunityMemberButton({
         disabled={loading}
         className="w-full cursor-pointer"
       >
-        {loading ? "..." : isMember ? "Leave Community" : "Join Community"}
+        {isMember ? "Leave Community" : "Join Community"}
       </Button>
       <Dialog open={open} onOpenChange={setOpen} >
         <DialogContent className="[&>button]:hidden">

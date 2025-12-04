@@ -37,11 +37,14 @@ export async function POST(
         { status: 400 }
       );
     }
-    await ModeratorService.assignModerator(
+    const moderator = await ModeratorService.assignModerator(
       parseInt(userId),
       id,
       session.user.username
     );
+    if (moderator == null) {
+      return Response.json({ error: "Not a member or is moderator already" }, { status: 400 })
+    }
     return Response.json({ message: "Moderator created successfully" }, { status: 201 });
   } catch (error: any) {
     return Response.json({ error: error.message }, { status: 400 }

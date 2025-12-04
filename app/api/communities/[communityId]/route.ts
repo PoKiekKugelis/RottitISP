@@ -40,7 +40,10 @@ export async function PUT(req: Request, { params }: { params: Promise<{ communit
         { error: "Invalid input", details: validationResult.error.issues }, { status: 422 }
       );
     }
-    const updatedCommunity = CommunityRepository.update(id, validationResult.data);
+    const updatedCommunity = await CommunityService.update(id, validationResult.data);
+    if (updatedCommunity == null) {
+      return Response.json({ error: "Community with this name already exists" }, { status: 409 })
+    }
     return Response.json(updatedCommunity, { status: 200 })
   } catch (error: any) {
     return Response.json({ error: "Failed to update community" }, { status: 400 })

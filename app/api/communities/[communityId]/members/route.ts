@@ -1,6 +1,7 @@
 import { requireAdmin, requireAuth, requireModerator } from "@/lib/auth";
 import { CommunityRepository } from "@/repositories/community.repository";
 import { CommunityService } from "@/services/community.service";
+import { UserService } from "@/services/user.service";
 
 export async function POST(
   req: Response,
@@ -20,6 +21,13 @@ export async function POST(
     return Response.json({ error: "Community not found" }, { status: 404 })
   }
   const userId = parseInt(session.user.id);
+
+  if (community.ageRestriction) {
+    const userAge = await UserService.getAge(userId)
+    if (userAge < 18) {
+      return Response.json({ error: "age requirement not met" }, { status: 400 })
+    }
+  }
 
   try {
     await CommunityService.joinCommunity(userId, communityId);

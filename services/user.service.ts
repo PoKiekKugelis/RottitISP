@@ -9,9 +9,11 @@ export class UserService {
       redirect: false,
     })
   }
+
   static async logout() {
     return await signOut();
   }
+
   static async register(data: {
     loginName: string,
     email: string,
@@ -26,6 +28,18 @@ export class UserService {
     }
     return await UserRepository.create(data);
   }
+
+  static async getAge(userId: number) {
+    const user = await UserRepository.findOne(userId)
+    const today = new Date();
+    let age = today.getFullYear() - user!.birthdate.getFullYear();
+    const month = today.getMonth() - user!.birthdate.getMonth();
+    if (month < 0 || (today.getDate() < user!.birthdate.getDate() && month == 0)) {
+      age--;
+    }
+    return age;
+  }
+
   static async addBadge() {
     //TODO
   }

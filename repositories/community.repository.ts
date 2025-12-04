@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import { ModeratorRepository } from "./moderator.repository";
 
 export class CommunityRepository {
   static async create(data: any) {
@@ -33,7 +34,19 @@ export class CommunityRepository {
   }
   static async findByName(title: string) {
     return await prisma.community.findUnique({
-      where: { name: title }
+      where: { name: title },
+      include: {
+        members: {
+          include: {
+            user: true
+          }
+        },
+        tags: {
+          include: {
+            tag: true
+          }
+        }
+      }
     })
   }
   static async findMember(userId: number, communityId: number) {
@@ -55,6 +68,11 @@ export class CommunityRepository {
     return community?.creatorId === userId
   }
   static async deleteMember(userId: number, communityId: number) {
+    if (await prisma.moderator.findFirst({
+      where: { userId, communityId }
+    })) {
+      ModeratorRepository.delete(userId, communityId)
+    }
     return await prisma.communityMember.delete({
       where: {
         communityId_userId: { communityId, userId }
@@ -89,6 +107,26 @@ export class CommunityRepository {
           select: { members: true }
         }
       }
+    })
+  }
+  static async addTag(communityId: number, tagId: number) {
+    return await prisma.communityTag.create({
+      data: { tagId: tagId, communityId: communityId }
+    })
+  }
+  static async deleteTag(communityId: number, tagId: number) {
+    return await prisma.communityTag.delete({
+      where: { communityId_tagId: { communityId: communityId, tagId: tagId } }
+    })
+  }
+  static async findTag(communityId: number, tagId: number) {
+    return await prisma.communityTag.findFirst({
+      where: { tagId: tagId, communityId: communityId }
+    })
+  }
+  static async findAllTags(communityId: number) {
+    return await prisma.communityTag.findMany({
+      where: { communityId: communityId }
     })
   }
 }
