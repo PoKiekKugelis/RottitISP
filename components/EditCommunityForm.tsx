@@ -10,8 +10,8 @@ import { useRouter } from "next/navigation";
 import { Community } from "@/models/community/entities/community.entity";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useSession } from "next-auth/react";
-import { X } from "lucide-react";
 import { Tag } from "@/models/tag/entities/tag.entity";
+import { uploadFile } from "@/components/CreateCommunityForm"
 
 interface EditCommunityProps {
   community: Community;
@@ -22,8 +22,8 @@ export function EditCommunityForm({ community, allTags }: EditCommunityProps) {
   const router = useRouter();
   const [name, setName] = useState(community.name);
   const [description, setDescription] = useState(community.description);
-  const [avatar, setAvatar] = useState(community.avatar);
-  const [header, setHeader] = useState(community.header);
+  const [avatar, setAvatar] = useState<File | null>(null);
+  const [header, setHeader] = useState<File | null>(null);
   const [ageRestriction, setAgeRestriction] = useState(community.ageRestriction);
   const [isLoading, setIsLoading] = useState(false);
   const [moderators, setModerators] = useState<number[]>([]);
@@ -90,16 +90,28 @@ export function EditCommunityForm({ community, allTags }: EditCommunityProps) {
     setError("");
     setIsLoading(true);
 
+
     try {
-      const data = { name, description, avatar, header, ageRestriction };
+      let avatarUrl = community.avatar;
+      let headerUrl = community.header;
+
+      if (avatar) {
+        avatarUrl = await uploadFile(avatar, community.id, "avatar");
+      }
+
+      if (header) {
+        headerUrl = await uploadFile(header, community.id, "header");
+      }
+
+      const data = { name, description, avatar: avatarUrl, header: headerUrl, ageRestriction };
       const communityResponse = await fetch(`/api/communities/${community.id}`, {
         method: "PUT",
         body: JSON.stringify(data),
         headers: { "Content-Type": "application/json" }
       });
 
+      const result = await communityResponse.json();
       if (!communityResponse.ok) {
-        const result = await communityResponse.json();
         setError(result.error);
         return;
       }
@@ -193,7 +205,7 @@ export function EditCommunityForm({ community, allTags }: EditCommunityProps) {
               id="avatar"
               type="file"
               className="cursor-pointer"
-              onChange={(e) => setAvatar(e.target.value)}
+              onChange={(e) => setAvatar(e.target.files?.[0] as File | null)}
             />
           </div>
 
@@ -203,17 +215,18 @@ export function EditCommunityForm({ community, allTags }: EditCommunityProps) {
               id="header"
               type="file"
               className="cursor-pointer"
-              onChange={(e) => setHeader(e.target.value)}
+              onChange={(e) => setHeader(e.target.files?.[0] as File | null)}
             />
           </div>
 
           <div className="flex items-center space-x-2">
+            <Label htmlFor="ageRestriction">Age restriction (18+)</Label>
             <Checkbox
               id="ageRestriction"
               checked={ageRestriction}
+              className="cursor-pointer"
               onCheckedChange={(checked) => setAgeRestriction(!!checked)}
             />
-            <Label htmlFor="ageRestriction">Age restriction (18+)</Label>
           </div>
 
           <hr />
@@ -224,7 +237,7 @@ export function EditCommunityForm({ community, allTags }: EditCommunityProps) {
               name="moderators"
               value=""
               onChange={(e) => handleAddModerator(e.target.value)}
-              className="border rounded p-2 w-full"
+              className="border rounded p-2 w-full cursor-pointer"
             >
               <option value="">Select members</option>
               {community.members
@@ -264,7 +277,7 @@ export function EditCommunityForm({ community, allTags }: EditCommunityProps) {
               name="tags"
               value=""
               onChange={(e) => handleAddTag(e.target.value)}
-              className="border rounded p-2 w-full"
+              className="border rounded p-2 w-full cursor-pointer"
             >
               <option value="">Select Tags</option>
               {allTags

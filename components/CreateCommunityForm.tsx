@@ -9,17 +9,40 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Tag } from "@/models/tag/entities/tag.entity";
+import { Community } from "@/models/community/entities/community.entity";
 
 interface CreateCommunityProps {
   allTags: Tag[]
 }
+export async function uploadFile(
+  file: File,
+  communityId: number,
+  type: "avatar" | "header"
+): Promise<string> {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("communityId", String(communityId));
+  formData.append("type", type);
+
+  const response = await fetch("/api/upload", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to upload ${type}`);
+  }
+
+  const { url } = await response.json();
+  return url;
+};
 
 export default function CreateCommunityForm({ allTags }: CreateCommunityProps) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [avatar, setAvatar] = useState("");
-  const [header, setHeader] = useState("");
+  const [avatar, setAvatar] = useState<File | null>(null);
+  const [header, setHeader] = useState<File | null>(null);
   const [ageRestriction, setAgeRestriction] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -36,16 +59,18 @@ export default function CreateCommunityForm({ allTags }: CreateCommunityProps) {
     setTagsToAdd(tagsToAdd.filter(id => id !== tagId));
   };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
     try {
+
       const data = {
         name,
         description,
-        avatar,
-        header,
+        avatar: "",
+        header: "",
         ageRestriction,
       };
       const response = await fetch('/api/communities', {
@@ -60,6 +85,32 @@ export default function CreateCommunityForm({ allTags }: CreateCommunityProps) {
         console.log(response)
         setError(result.error)
         return;
+      }
+      const communityId = result.id
+      let avatarUrl = "";
+      let headerUrl = "";
+
+      if (avatar) {
+        avatarUrl = await uploadFile(avatar, communityId, "avatar");
+      }
+
+      if (header) {
+        headerUrl = await uploadFile(header, communityId, "header");
+      }
+      if (avatarUrl || headerUrl) {
+        const updateResponse = await fetch(`/api/communities/${communityId}`, {
+          method: "PUT",
+          body: JSON.stringify({
+            avatar: avatarUrl || result.avatar,
+            header: headerUrl || result.header,
+          }),
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!updateResponse.ok) {
+          const result = await updateResponse.json()
+          setError(result.error);
+          return;
+        }
       }
       for (const tag of tagsToAdd) {
         const tagResponse = await fetch(`/api/communities/${result.id}/tags`, {
@@ -77,6 +128,7 @@ export default function CreateCommunityForm({ allTags }: CreateCommunityProps) {
       router.push(`/rot/${name}`);
     } catch (error: any) {
       console.error(error);
+      setError(error)
     } finally {
       setIsLoading(false);
     }
@@ -118,8 +170,8 @@ export default function CreateCommunityForm({ allTags }: CreateCommunityProps) {
             <Input
               id="avatar"
               type="file"
-              value={avatar}
-              onChange={(e) => setAvatar(e.target.value)}
+              className="cursor-pointer"
+              onChange={(e) => setAvatar(e.target.files?.[0] || null)}
             />
           </div>
 
@@ -128,15 +180,16 @@ export default function CreateCommunityForm({ allTags }: CreateCommunityProps) {
             <Input
               id="header"
               type="file"
-              value={header}
-              onChange={(e) => setHeader(e.target.value)}
+              className="cursor-pointer"
+              onChange={(e) => setHeader(e.target.files?.[0] as File)}
             />
           </div>
 
-          <div className="space-y-2 left">
-            <Label htmlFor="ageRestriction">Age restriction</Label>
+          <div className="flex items-center space-x-2">
+            <Label htmlFor="ageRestriction">Age restriction (18+)</Label>
             <Checkbox
               id="ageRestriction"
+              className="cursor-pointer"
               checked={ageRestriction}
               onCheckedChange={(e) => setAgeRestriction(!!e)}
             />
@@ -147,7 +200,7 @@ export default function CreateCommunityForm({ allTags }: CreateCommunityProps) {
               name="tags"
               value=""
               onChange={(e) => handleAddTag(e.target.value)}
-              className="border rounded p-2 w-full"
+              className="border rounded p-2 w-full cursor-pointer"
             >
               <option value="">Select Tags</option>
               {allTags

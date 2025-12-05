@@ -5,6 +5,7 @@ import SideBar from "@/components/SideBar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button"
 import { CommunityRepository } from "@/repositories/community.repository";
+import AvatarImg from "@/components/Avatar";
 
 export default async function CommunityPage({ params }: {
   params: Promise<{ communityName: string }>
@@ -15,13 +16,20 @@ export default async function CommunityPage({ params }: {
     return <div>Community not found</div>;
   }
 
+  const imageSrc = community.avatar;
+  const imageAlt = "@shadcn";
+  const imageFallBack = "CN";
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
       <div className="bg-primary text-primary-foreground">
         <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
-          <h1 className="text-3xl font-bold">rot/{communityName}</h1>
+          <h1 className="text-3xl font-bold">
+            <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} />
+
+            rot/{communityName}</h1>
         </div>
       </div>
       <main className="max-w-7xl mx-auto px-4 py-6 flex gap-6">

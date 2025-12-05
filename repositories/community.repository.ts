@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { ModeratorRepository } from "./moderator.repository";
+import { rm } from "fs/promises";
+import path from "path";
 
 export class CommunityRepository {
   static async create(data: any) {
@@ -28,6 +30,8 @@ export class CommunityRepository {
     });
   }
   static async delete(id: number) {
+    const folderPath = path.join(process.cwd(), `public/uploads/community-${id}`)
+    await rm(folderPath, { recursive: true, force: true });
     return await prisma.community.delete({
       where: { id }
     });

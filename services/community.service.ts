@@ -22,17 +22,20 @@ export class CommunityService {
     await ModeratorService.assignModerator(data.creatorId, community.id, "System")
     return community;
   }
+
   static async update(id: number, data: {
-    name: string,
-    description: string,
-    avatar: string,
-    header: string,
-    ageRestriction: boolean
+    name?: string,
+    description?: string,
+    avatar?: string,
+    header?: string,
+    ageRestriction?: boolean
   }
   ) {
-    const existing = await CommunityRepository.findByName(data.name);
-    if (existing && existing.id != id) {
-      return null
+    if (data.name != undefined) {
+      const existing = await CommunityRepository.findByName(data.name!);
+      if (existing && existing.id != id) {
+        return null
+      }
     }
     return await CommunityRepository.update(id, data)
   }
