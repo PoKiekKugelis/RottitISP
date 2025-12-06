@@ -27,7 +27,7 @@ export class EventRepository {
   static async update(id: number, data: any) {
     return await prisma.event.update({
       where: { id },
-      data: data,
+      data: data
     });
   }
   static async delete(id: number) {

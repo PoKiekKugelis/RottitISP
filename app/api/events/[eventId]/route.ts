@@ -15,21 +15,28 @@ export async function GET(req: Request, { params }: { params: Promise<{ eventId:
     }
 }
 
-export async function PUT(req: Request, { params }: { params: Promise<{ eventId: string }> }) {
+export async function PUT(req: Request) {
     try {
-        const { eventId } = await params;
+        const { searchParams } = new URL(req.url);
+        const eventId = searchParams.get("eventId");
+        if (!eventId) {
+            return Response.json(
+                { error: `Event id not found in params: ${eventId}` },
+                { status: 404 }
+            );
+        }
+        //Checks if event exists and gets communityId
         const id = parseInt(eventId);
-        const session = await requireModerator(id);
-        if (session instanceof Response) return session
-
         if (isNaN(id)) {
             return Response.json({ error: "Invalid event ID" }, { status: 400 })
         }
-
         const event = await EventRepository.findOne(id);
         if (!event) {
             return Response.json({ error: "Event not found" }, { status: 404 })
         }
+
+        const session = await requireModerator(event.communityId);
+        if (session instanceof Response) return session
 
         const creator = await EventRepository.isCreator(parseInt(session.user.id), id)
         if (!creator) {
