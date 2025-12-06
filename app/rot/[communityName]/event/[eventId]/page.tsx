@@ -58,7 +58,7 @@ export default async function EventPage({ params }: {
                   rot/{communityName}
                 </Badge>
               </Link>
-              <div className="flex ml-80">
+              <div className="absolute ml-130">
                 <Link href={`/rot/${communityName}/event/${eventId}/edit`}><Button className="float-right">Edit</Button></Link>
               </div>
             </div>

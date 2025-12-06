@@ -42,7 +42,7 @@ export function DateTimePicker({
               id="date-picker"
               className="w-32 justify-between font-normal"
             >
-              {date ? date.toLocaleDateString("lt-LT") : "Select date"}
+              {date ? date.toLocaleString("lt-LT", { year: "numeric", month: "numeric", day: "numeric" }) : "Select date"}
               <ChevronDownIcon />
             </Button>
           </PopoverTrigger>

@@ -13,7 +13,8 @@ export const UpdateEvent = z.object({
     description: z.string().max(255),
     startsAt: z.iso.datetime(),
     endsAt: z.iso.datetime(),
-    address: z.string().max(255)
+    address: z.string().max(255),
+    editStatus: z.boolean()
 });
 
 // Type inference
