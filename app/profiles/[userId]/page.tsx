@@ -19,23 +19,23 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
+import { nan } from "zod";
 
 export default async function ProfilePage({ params }: {
   params: Promise<{ userId: string }>
 }) {
 
   const { userId } = await params;
-  //const imageSrc = "https://github.com/shadcn.png";
-  const imageAlt = "@shadcn";
-  const imageFallBack = "CN";
-
   const user = await UserRepository.findOne(parseInt(userId))
   if (!user) {
     return (<div>User not found</div>)
   }
   const badges = await BadgeRepository.findAllByUser(parseInt(userId))
-
   const currentUser = await getCurrentUser();
+
+  const imageSrc = user.avatar;
+  const imageAlt = "@shadcn";
+  const imageFallBack = "CN";
 
   return (
     <div className="min-h-screen bg-gradient-to-br flex items-center justify-center px-4 from-secondary/20 to-primary/20">
@@ -62,7 +62,7 @@ export default async function ProfilePage({ params }: {
           <CardHeader>
             <div className="flex flex-row items-left justify-left w-1/2 gap-x-5">
               <CardTitle className="text-2xl">{user.username}</CardTitle>
-              <AvatarImg src={user.avatar} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} />
+              <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} />
             </div>
             <CardDescription>
               <div className="flex gap-2 items-left justify-left">

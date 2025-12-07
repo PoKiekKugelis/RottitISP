@@ -9,6 +9,9 @@ export class UserRepository {
     });
   }
   static async findOne(id: number) {
+    if (Number.isNaN(id)){
+      return null;
+    }
     return await prisma.user.findUnique({
       where: { id: id }
     });
