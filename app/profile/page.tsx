@@ -1,23 +1,30 @@
-"use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import AvatarImg from "@/components/Avatar";
+import { UserRepository } from "@/repositories/user.repository";
 
-export default function Profile() {
-  const [username, setUsername] = useState("Nickas");
+export default async function ProfilePage({ params }: {
+  params: Promise<{ userId: string }>
+}) {
+  /*const [username, setUsername] = useState("Nickas");
   const [country, setCountry] = useState("Lithuania");
   const [birthDate, setBirthDate] = useState("2000-01-01");
   const [karmaPoints, setKarmaPoints] = useState(1000);
   const [bio, setBio] = useState("Ay, Im walking 'ere");
   const [creationDate, setCreationDate] = useState("2025-11-02");
   const [onlineStatus, setOnlineStatus] = useState(false);
-
+  */
+  const { userId } = await params;
   const imageSrc = "https://github.com/shadcn.png";
   const imageAlt = "@shadcn";
   const imageFallBack = "CN";
+
+  const user = await UserRepository.findOne(parseInt(userId))
+  if (!user) {
+    return (<div>User not found</div>)
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br flex items-center justify-center px-4 from-secondary/20 to-primary/20">
@@ -38,13 +45,13 @@ export default function Profile() {
         <Card>
           <CardHeader>
             <div className="flex flex-row items-left justify-left w-1/2 gap-x-5">
-              <CardTitle className="text-2xl">{username}</CardTitle>
-              <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"}/>
+              <CardTitle className="text-2xl">{user.username}</CardTitle>
+              <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} />
             </div>
             <CardDescription>
               <div className="flex gap-2 items-left justify-left">
-                <p>Created at {creationDate}</p>
-                {onlineStatus? <p className="text-green-500">•Online</p>: <p className="text-red-500">•Offline</p>}
+                <p>Created at {user.createdAt.toLocaleString("lt-LT", { year: "numeric", month: "numeric", day: "numeric" })}</p>
+                {user.status ? <p className="text-green-500">•Online</p> : <p className="text-red-500">•Offline</p>}
               </div>
             </CardDescription>
           </CardHeader>
@@ -52,19 +59,19 @@ export default function Profile() {
             <div className="text-left text-lg">
               <div className="flex flex-row items-left justify-left w-1/2 gap-x-3">
                 <h1>Country:</h1>
-                <p>{country}</p>
+                <p>{user.country}</p>
               </div>
               <div className="flex flex-row items-left justify-left gap-x-3">
                 <h1>Date of birth:</h1>
-                <p>{birthDate}</p>
+                <p>{user.birthdate.toLocaleString("lt-LT", { year: "numeric", month: "numeric", day: "numeric" })}</p>
               </div>
               <div className="flex flex-row items-left justify-left w-1/2 gap-x-3">
                 <h1>Karma points:</h1>
-                <p>{karmaPoints}</p>
+                <p>{user.karma}</p>
               </div>
               <div className="flex flex-row items-left justify-left gap-x-3">
                 <h1>Description:</h1>
-                <p>{bio}</p>
+                <p>{user.bio}</p>
               </div>
               <br></br>
               <div className="flex gap-3">
