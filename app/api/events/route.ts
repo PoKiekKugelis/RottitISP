@@ -3,7 +3,6 @@ import { EventService } from "@/services/event.service"
 import { EventRepository } from "@/repositories/event.repository";
 import { CommunityRepository } from "@/repositories/community.repository";
 import { requireModerator } from "@/lib/auth"
-import { error } from "console";
 
 export async function GET(req: Request, { params }: { params: Promise<{ communityName: string }> }) {
     try {

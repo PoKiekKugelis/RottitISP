@@ -16,19 +16,6 @@ export default async function EventPage({ params }: {
 }) {
   const { communityName, eventId } = await params;
 
-  const imageSrc = "https://github.com/shadcn.png";
-  const imageAlt = "@shadcn";
-  const imageFallBack = "CN";
-
-  // const [username, setUsername] = useState("admin");
-  // const [creationDate, setCreationDate] = useState("2025-11-02");
-  // const [title, setTitle] = useState("Susitikimas!");
-  // const [startDate, setStartDate] = useState("2025-11-18");
-  // const [endDate, setEndDate] = useState("2025-11-18 at 22:00");
-  // const [location, setLocation] = useState("Lithuania, Kaunas, studentų g. 67");
-  // const [description, setDescription] = useState("Sveiki, norėjau pranešti, kad vyksta bendruomenės susitikimas. " +
-  //   "Bus maisto ir gėrimų bei visokių įdomybių. Kviečiami visi!");
-  // const [editStatus, setEditStatus] = useState(true);
   const event = await EventRepository.findOne(parseInt(eventId))
   if (!event) {
     return (<div>Event not found</div>)
@@ -38,6 +25,13 @@ export default async function EventPage({ params }: {
     return <div>Community not found</div>;
   }
   const user = await UserRepository.findOne(event.creatorUserId)
+  if (!user) {
+    return <div>Creator not found</div>;
+  }
+
+  const imageSrc = user.avatar;
+  const imageAlt = "@shadcn";
+  const imageFallBack = "CN";
 
   return (
     <div className="min-h-screen bg-background">
@@ -51,7 +45,7 @@ export default async function EventPage({ params }: {
         <Card>
           <CardHeader>
             <div className="flex flex-row items-left justify-left w-1/2 gap-x-2">
-              <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} />
+              <Link href={`/profiles/${user?.id}`} ><AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"}/></Link>
               <CardTitle className="text-md">{user?.username}</CardTitle>
               <Link href={`/rot/${communityName}`}>
                 <Badge variant="outline" className="text-xs mb-1 hover:bg-background cursor-pointer">

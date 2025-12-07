@@ -7,14 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function Profile() {
+export default function changePassword() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [newPass, setNewPass] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href='/editProfile';
+    window.location.href='/'; //Change this
   };
 
   return (

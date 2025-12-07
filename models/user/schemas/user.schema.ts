@@ -10,11 +10,12 @@ export const CreateUser = z.object({
 });
 
 export const UpdateUser = z.object({
-  email: z.email().max(50),
+  loginName: z.string().max(30),
+  username: z.string().max(30),
   avatar: z.string().max(255),
   country: z.string().max(50),
-  username: z.string().max(30),
-  bio: z.string().max(255),
+  birthdate: z.iso.datetime(),
+  bio: z.string().max(255)
 });
 
 export type CreateUser = z.infer<typeof CreateUser>;

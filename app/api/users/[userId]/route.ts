@@ -61,7 +61,7 @@ export async function DELETE(
 
     if (isNaN(id)) {
       return Response.json(
-        { error: "Invalid community ID" }, { status: 400 });
+        { error: "Invalid user ID" }, { status: 400 });
     }
 
     const user = UserRepository.findOne(id);
@@ -70,10 +70,10 @@ export async function DELETE(
     }
     UserRepository.delete(id);
 
-    return Response.json({ message: "Community deleted successfully" }, { status: 200 });
+    return Response.json({ message: "User deleted successfully" }, { status: 200 });
   } catch (error: any) {
     return Response.json(
-      { error: "Failed to delete community", details: (error as { meta?: unknown })?.meta },
+      { error: "Failed to delete user", details: (error as { meta?: unknown })?.meta },
       { status: 400 }
     );
   }

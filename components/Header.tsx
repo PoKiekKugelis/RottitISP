@@ -3,10 +3,12 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import AvatarImg from "@/components/Avatar";
+import { getCurrentUser } from "@/lib/auth"
 
-export default function Header() {
+export default async function Header() {
 
-  const imageSrc = "https://github.com/shadcn.png";
+  const currentUser = await getCurrentUser();
+  const imageSrcIfNull = "https://github.com/shadcn.png";
   const imageAlt = "@shadcn";
   const imageFallBack = "CN";
 
@@ -32,7 +34,10 @@ export default function Header() {
           <Button asChild>
             <Link href="/register">Sign Up</Link>
           </Button>
-          <Link href="/profile"><AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"}/></Link>
+          { currentUser == null ?
+            <AvatarImg src={imageSrcIfNull} alt={imageAlt} fallBack={imageFallBack} size={"size-9"}/> :
+            <Link href={`/profiles/${currentUser?.id}`} ><AvatarImg src={currentUser.avatar} alt={imageAlt} fallBack={imageFallBack} size={"size-9"}/></Link>
+          }
         </div>
       </div>
     </header>
