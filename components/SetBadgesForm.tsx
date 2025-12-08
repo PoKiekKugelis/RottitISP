@@ -191,7 +191,6 @@ export default function SetBadgesForm({
                             <br></br>
                             <Button
                                 type="button"
-                                variant="outline"
                                 onClick={() => router.back()}>
                                 Go back
                             </Button>

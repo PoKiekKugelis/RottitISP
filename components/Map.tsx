@@ -13,7 +13,7 @@ export default function Map(props: any) {
     />
     <Marker position={position}>
       <Popup>
-        A pretty CSS3 popup. <br /> Easily customizable.
+        Event location.
       </Popup>
     </Marker>
   </MapContainer>

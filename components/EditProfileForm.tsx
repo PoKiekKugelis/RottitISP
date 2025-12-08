@@ -20,7 +20,7 @@ export default function EditProfileForm({
 }: EditProfileProps) {
     const router = useRouter();
     const currentUsername = user.username;
-    const [avatar, setAvatar] = useState("");
+    const [avatar, setAvatar] = useState<File | null>(null);
     const [loginName, setLoginName] = useState(user.loginName);
     const [username, setUsername] = useState(user.username);
     const [country, setCountry] = useState(user.country);
@@ -33,29 +33,40 @@ export default function EditProfileForm({
     const imageAlt = "@shadcn";
     const imageFallBack = "CN";
 
+    async function uploadFile(
+        file: File,
+        userId: number
+    ): Promise<string> {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("userId", String(userId));
+        formData.append("type", "avatar");
+
+        const response = await fetch("/api/uploadAvatar", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const error = await response.json()
+            setError(error.error);
+            return "";
+        }
+
+        const { url } = await response.json();
+        return url;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setError("");
 
-        // Checks if the uploaded file is in the correct format (extension)
-        if (avatar != "") {
-            const fileExtension = avatar.split('.').pop();
-            if (fileExtension == "jpg" || fileExtension == "png") {
-                console.log("The file extension is valid");
-            } else {
-                console.log("The file has to be jpg or png");
-                setError("The file has to be jpg or png");
-                setIsLoading(false);
-                return;
-            }
-        }
-
         try {
             const data = {
                 loginName,
                 username,
-                avatar: avatar,
+                avatar: "",
                 country,
                 birthdate: new Date(new Date(birthDate).toLocaleString("lt-LT", { year: "numeric", month: "numeric", day: "numeric" })).toISOString(),
                 bio
@@ -71,6 +82,36 @@ export default function EditProfileForm({
             if (!response.ok) {
                 console.log(response);
                 setError(result.error);
+                return;
+            }
+
+            //Uploads avatar if a file has been chosen
+            let avatarUrl = "";
+
+            if (avatar) {
+                avatarUrl = await uploadFile(avatar, user.id);
+            }
+            if (avatarUrl) {
+                const data = {
+                    loginName,
+                    username,
+                    avatar: avatarUrl || result.avatar,
+                    country,
+                    birthdate: new Date(new Date(birthDate).toLocaleString("lt-LT", { year: "numeric", month: "numeric", day: "numeric" })).toISOString(),
+                    bio
+                }
+                const updateResponse = await fetch(`/api/users/${user.id}?userId=${user.id}`, {
+                    method: "PUT",
+                    body: JSON.stringify(data),
+                    headers: { "Content-Type": "application/json" },
+                });
+                if (!updateResponse.ok) {
+                    const result = await updateResponse.json()
+                    setError(result.error);
+                    return;
+                }
+            }
+            else if (avatar && !avatarUrl) {
                 return;
             }
             router.push(`/profiles/${user.id}`);
@@ -111,9 +152,8 @@ export default function EditProfileForm({
                                     <Input
                                         id="avatar"
                                         type="file"
-                                        placeholder="Change your avatar"
-                                        value={avatar}
-                                        onChange={(e) => setAvatar(e.target.value)}
+                                        className="cursor-pointer"
+                                        onChange={(e) => setAvatar(e.target.files?.[0] || null)}
                                     />
                                 </div>
 
