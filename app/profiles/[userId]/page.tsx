@@ -19,7 +19,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
-import { nan } from "zod";
 
 export default async function ProfilePage({ params }: {
   params: Promise<{ userId: string }>

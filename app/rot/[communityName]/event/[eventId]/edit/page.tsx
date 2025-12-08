@@ -1,7 +1,7 @@
 import EditEventForm from "@/components/EditEventForm";
 import { CommunityRepository } from "@/repositories/community.repository";
 import { EventRepository } from "@/repositories/event.repository";
-import { requireModerator, requireAdmin } from "@/lib/auth"
+import { getCurrentUser } from "@/lib/auth"
 
 export default async function EditEventPage({ params }: {
   params: Promise<{ communityName: string, eventId: string }>
@@ -16,6 +16,10 @@ export default async function EditEventPage({ params }: {
   const community = await CommunityRepository.findByName(communityName);
   if (!community) {
     return <div>Community not found</div>;
+  }
+  const currentUser = await getCurrentUser();
+  if (currentUser == null || currentUser?.id != event.creatorUserId) {
+    return (<div>Unauthorized</div>)
   }
 
   const title = event.title;
