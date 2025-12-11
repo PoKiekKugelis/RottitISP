@@ -1,13 +1,15 @@
 import EventCard from "@/components/EventCard";
+import { CommunityRepository } from "@/repositories/community.repository";
+import { EventRepository } from "@/repositories/event.repository";
 
 interface EventFeedProps {
   communityName?: string;
 }
 
-export default function PostFeed({ communityName }: EventFeedProps) {
+export default async function PostFeed({ communityName }: EventFeedProps) {
 
 
-  const AllEvents = [
+  const AllEvents0 = [
     {
       id: 1,
       title: "Susitikimas!",
@@ -17,16 +19,22 @@ export default function PostFeed({ communityName }: EventFeedProps) {
         "Bus maisto ir gėrimų bei visokių įdomybių. Kviečiami visi!"
     }
   ];
-  const events = communityName
-    ? AllEvents.filter(event => event.community == communityName)
-    : AllEvents;
+
+  if (!communityName){
+    return ""
+  }
+  const community = await CommunityRepository.findByName(communityName);
+  if (!community){
+    return ""
+  }
+  const AllEvents = await EventRepository.findAllByCommunity(community.id);
 
   return (
     <div className="space-y-4">
-      {events.map((event) => (
-        <EventCard key={event.id} {...event} />
+      {AllEvents.map((event) => (
+        <EventCard key={event.id} event={event} community={community} />
       ))}
-      {events.length != 0 ? <br></br>: ""}
+      {AllEvents.length != 0 ? <br></br>: ""}
     </div>
   );
 }
