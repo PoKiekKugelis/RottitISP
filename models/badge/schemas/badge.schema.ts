@@ -8,19 +8,19 @@ export enum Rarity {
 
 export const BadgeSchema = z.object({
     id: z.number(),
-    name: z.string().max(50),
-    description: z.email().max(255),
+    name: z.string().max(50).regex(/^[a-zA-Z]{1,}.{0,}/).trim(),
+    description: z.string().max(255).regex(/^[a-zA-Z]{1,}.{0,}/).trim(),
     avatar: z.string().max(255),
     price: z.number(),
     rarity: z.enum(Rarity)
 });
 
 export const CreateBadgeSchema = z.object({
-    name: z.string().max(50),
-    description: z.email().max(255),
-    avatar: z.string().max(255),
-    price: z.number(),
-    rarity: z.enum(Rarity)
+    name: z.string().max(50).regex(/^[a-zA-Z]{1,}.{0,}/).trim().optional(),
+    description: z.string().max(255).regex(/^[a-zA-Z]{1,}.{0,}/).trim().optional(),
+    avatar: z.string().max(255).optional(),
+    price: z.number().optional(),
+    rarity: z.enum(Rarity).optional()
 });
 
 // Type inference

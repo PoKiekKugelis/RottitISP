@@ -26,6 +26,20 @@ export default function Login() {
         setError("Invalid credentials")
         return;
       } else if (result?.ok) {
+        //Sets online status to true
+        const response = await fetch(`/api/changeStatus?name=${loginName}`, {
+          method: 'PUT',
+          headers: { "Content-Type": "application/json" }
+        })
+        const result = await response.json()
+        console.log(result)
+
+        if (!response.ok) {
+          console.log(response);
+          setError(result.error);
+          setIsLoading(false);
+          return;
+        }
         router.push("/")
       }
     } catch (error: any) {

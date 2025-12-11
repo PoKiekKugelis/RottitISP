@@ -16,6 +16,11 @@ export class UserRepository {
       where: { id: id }
     });
   }
+  static async findOneByName(loginName: string) {
+    return await prisma.user.findUnique({
+      where: { loginName: loginName }
+    });
+  }
   static async findAny(filters: {
     loginName?: string;
     username?: string;

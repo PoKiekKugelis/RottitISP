@@ -1,7 +1,7 @@
 import { UpdateEvent } from "@/models/event/schemas/event.schema";
 import { EventService } from "@/services/event.service"
 import { EventRepository } from "@/repositories/event.repository";
-import { requireModerator, requireAdmin } from "@/lib/auth"
+import { requireModerator } from "@/lib/auth"
 
 export async function GET(req: Request, { params }: { params: Promise<{ eventId: string }> }) {
     try {
@@ -63,21 +63,23 @@ export async function DELETE(request: Response, { params }: { params: Promise<{ 
     try {
         const { eventId } = await params;
         const id = parseInt(eventId);
-        const session = await requireAdmin();
-        if (session instanceof Response) return session
 
         if (isNaN(id)) {
             return Response.json(
                 { error: "Invalid event ID" }, { status: 400 });
         }
 
-        const event = EventRepository.findOne(id);
+        const event = await EventRepository.findOne(id);
         if (!event) {
             return Response.json({ error: "Event not found" }, { status: 404 })
         }
-        EventRepository.delete(id);
 
+        const session = await requireModerator(event.communityId);
+        if (session instanceof Response) return session
+
+        EventRepository.delete(id);
         return Response.json({ message: "Event deleted successfully" }, { status: 200 });
+        
     } catch (error: any) {
         return Response.json(
             { error: "Failed to delete event", details: (error as { meta?: unknown })?.meta },

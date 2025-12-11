@@ -42,6 +42,7 @@ export default async function CommunityPage({ params }: {
           </p>
         </div>
       </div>
+      <br></br>
       <main className="max-w-7xl mx-auto px-4 flex gap-6">
         <div className="flex-1">
           <EventFeed communityName={communityName} />
