@@ -7,8 +7,7 @@ interface EventFeedProps {
 }
 
 export default async function PostFeed({ communityName }: EventFeedProps) {
-
-
+  /*
   const AllEvents0 = [
     {
       id: 1,
@@ -19,6 +18,7 @@ export default async function PostFeed({ communityName }: EventFeedProps) {
         "Bus maisto ir gėrimų bei visokių įdomybių. Kviečiami visi!"
     }
   ];
+  */
 
   if (!communityName){
     return ""

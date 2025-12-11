@@ -8,9 +8,23 @@ import AvatarImg from "@/components/Avatar";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertCircleIcon } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Event } from "@/models/event/entities/event.entity"
 import { Community } from "@/models/community/entities/community.entity"
 import { User } from "@/models/user/entities/user.entity"
+import { useRouter } from "next/navigation";
 
 interface ViewEventProps {
     event: Event;
@@ -26,10 +40,12 @@ export default function ViewEventPage({
     user
 }: ViewEventProps) {
 
+    const router = useRouter();
     const imageSrc = creator.avatar;
     const imageAlt = "@shadcn";
     const imageFallBack = "CN";
     const [showMap, setShowMap] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
     const [isMap, setIsMap] = useState(false);
     const [location, setLocation] = useState([55, 23]);
 
@@ -72,6 +88,27 @@ export default function ViewEventPage({
         }
     ), [])
 
+    const deleteEvent = async () => {
+
+        try {
+            const response = await fetch(`/api/events/${event.id}`, {
+                method: "DELETE"
+            })
+            const result = await response.json()
+            console.log(result)
+
+            if (!response.ok) {
+                console.log(response);
+                return;
+            }
+
+            router.push(`/`);
+
+        } catch (error: any) {
+            console.error(error);
+        }
+    }
+
     return (
         <Card>
             <CardHeader>
@@ -84,9 +121,31 @@ export default function ViewEventPage({
                         </Badge>
                     </Link>
                     {user?.id != null && user?.id == creator.id ?
-                        <div className="absolute ml-130">
-                            <Link href={`/rot/${community.name}/event/${event.id}/edit`}><Button className="float-right">Edit</Button></Link>
-                        </div> : ""
+                        <div className="absolute">
+                            <div className="absolute ml-110">
+                                <Link href={`/rot/${community.name}/event/${event.id}/edit`}><Button className="float-right">Edit</Button></Link>
+                            </div>
+                            <div className="absolute ml-125">
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button >Delete</Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you sure you want to delete this event?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone. This will permanently delete the event.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => deleteEvent()}>Continue</AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            </div>
+                        </div>
+                        : ""
                     }
                 </div>
                 <CardDescription>
@@ -95,6 +154,20 @@ export default function ViewEventPage({
                         <p>{event.editStatus ? "•Edited" : ""}</p>
                     </div>
                 </CardDescription>
+
+                {/* Shows delete confirmation */}
+                {showDelete ?
+                    <Alert variant="destructive">
+                        <AlertCircleIcon />
+                        <AlertTitle>Are you sure you want to delete this event?</AlertTitle>
+                        <AlertDescription>
+                            <Button>Confirm</Button>
+                            <Button onClick={() => setShowDelete(false)}>Cancel</Button>
+                        </AlertDescription>
+                    </Alert>
+                    : ""
+                }
+
                 <div>
                     <h1 className="text-2xl font-bold">{event.title}</h1>
                 </div>
@@ -111,22 +184,22 @@ export default function ViewEventPage({
 
                     {/* Shows location in map */}
                     {showMap ?
-                      isMap ?
-                        <Card>
-                            <CardContent>
-                                <div>
-                                    <Map position={[location[0], location[1]]} zoom={17}></Map>
-                                </div>
-                            </CardContent>
-                        </Card>
-                        :
-                        <Card>
-                            <CardContent>
-                                <div>
-                                    <h1>We are unable to show the given location on the map</h1>
-                                </div>
-                            </CardContent>
-                        </Card> : ""
+                        isMap ?
+                            <Card>
+                                <CardContent>
+                                    <div>
+                                        <Map position={[location[0], location[1]]} zoom={17}></Map>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                            :
+                            <Card>
+                                <CardContent>
+                                    <div>
+                                        <h1>We are unable to show the given location on the map</h1>
+                                    </div>
+                                </CardContent>
+                            </Card> : ""
                     }
 
                     <br></br>
