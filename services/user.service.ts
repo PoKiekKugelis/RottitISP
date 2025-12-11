@@ -1,4 +1,6 @@
+import { getCurrentUser } from "@/lib/auth";
 import { UserRepository } from "@/repositories/user.repository";
+import { error } from "console";
 import { signIn, signOut } from "next-auth/react";
 
 export class UserService {
@@ -38,6 +40,18 @@ export class UserService {
       age--;
     }
     return age;
+  }
+
+  static async changeStatus(loginName: string) {
+    const user = await UserRepository.findOneByName(loginName);
+    if (!user) {
+      throw new Error("Could not get user id via session");
+    }
+    const oldStatus = user.status;
+    const data = {
+      status: !oldStatus
+    }
+    return await UserRepository.update(user.id, data);
   }
 
   static async addBadge() {

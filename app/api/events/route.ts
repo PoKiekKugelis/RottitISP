@@ -65,7 +65,7 @@ export async function POST(req: Request) {
         const validationResult = CreateEvent.safeParse(body);
         if (!validationResult.success) {
             return Response.json(
-                { error: "Invalid input " + body.startsAt, details: validationResult.error.issues },
+                { error: "Invalid input ", details: validationResult.error.issues },
                 { status: 422 }
             );
         }

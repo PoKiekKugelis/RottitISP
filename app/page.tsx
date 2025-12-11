@@ -8,6 +8,7 @@ import bcrypt from "bcryptjs";
 import { Community } from "@/models/community/entities/community.entity";
 import { CreateCommunity } from "@/models/community/schemas/community.schema";
 import { CommunityService } from "@/services/community.service";
+import { getCurrentUser } from "@/lib/auth";
 
 async function testDB() {
   // This function is purely to test out that DB queries work
