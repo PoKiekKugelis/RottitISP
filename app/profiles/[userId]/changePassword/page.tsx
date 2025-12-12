@@ -7,8 +7,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
 
 export default function ChangePasswordPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const tokenFromEmail = searchParams.get("token");
 
@@ -99,7 +101,7 @@ export default function ChangePasswordPage() {
             </form>
 
             <br />
-            <Link href="/"><Button>Cancel</Button></Link>
+            <Button onClick={() => router.back()}>Cancel</Button>
           </CardContent>
         </Card>
       </div>

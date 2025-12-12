@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       }
     });
 
-    const link = `${process.env.NEXT_PUBLIC_APP_URL}/profiles/${user.id}/changePassword.tsx?token=${token}`;
+    const link = `${process.env.NEXT_PUBLIC_APP_URL}/profiles/${user.id}/changePassword?token=${token}`;
 
     await transporter.sendMail({
       from: process.env.SMTP_FROM,

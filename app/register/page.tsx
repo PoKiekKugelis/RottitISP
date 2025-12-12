@@ -120,7 +120,7 @@ export default function Register() {
                   required
                 />
                 <p className="text-xs text-muted-foreground">
-                  Must be at least 21 characters long
+                  Must be at least 4 characters long and include at least one uppercase, one lowercase letter and a number
                 </p>
               </div>
 
