@@ -89,7 +89,7 @@ export default function SetBadgesForm({
                 return;
             }
             console.log("Badge bought: " + selectedBadge);
-            router.refresh();
+            router.push(`/profiles/${user.id}`);
 
         } catch (error: any) {
             console.error(error);

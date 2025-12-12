@@ -66,7 +66,7 @@ export default function EditProfileForm({
             const data = {
                 loginName,
                 username,
-                avatar: "",
+                avatar: user.avatar,
                 country,
                 birthdate: new Date(new Date(birthDate).toLocaleString("lt-LT", { year: "numeric", month: "numeric", day: "numeric" })).toISOString(),
                 bio
