@@ -4,7 +4,6 @@ import crypto from "crypto";
 import nodemailer from "nodemailer";
 import { prisma } from "@/lib/prisma";
 
-// In-memory token storage
 const passwordResetStore = new Map();
 
 export async function POST(req: Request) {
@@ -26,18 +25,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Incorrect current password." }, { status: 401 });
     }
 
-    // Create token
     const token = crypto.randomBytes(32).toString("hex");
     const expires = Date.now() + 15 * 60 * 1000; // 15 minutes
 
-    // Store token + new password in memory
     passwordResetStore.set(token, {
       userId: user.id,
       newPassword,
       expires
     });
 
-    // Email transport
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT),

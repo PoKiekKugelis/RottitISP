@@ -18,7 +18,6 @@ export default function ChangePasswordPage() {
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
 
-  // If link contains ?token=xxxx → confirm password
   useEffect(() => {
     if (!tokenFromEmail) return;
 
