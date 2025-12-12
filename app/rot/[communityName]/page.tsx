@@ -34,24 +34,25 @@ export default async function CommunityPage({ params }: {
           <AvatarImg src={avatarSrc} alt={avatarAlt} fallBack={avatarFallBack} size={"size-19"} />
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-4 mt-4 ml-24">
-        <div>
-          <h1 className="text-3xl font-bold">rot/{communityName}</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            {community.description}
-          </p>
-        </div>
-      </div>
-      <br></br>
-      <main className="max-w-7xl mx-auto px-4 flex gap-6">
+      <div className="flex">
         <div className="flex-1">
-          <EventFeed communityName={communityName} />
-          <PostFeed communityName={communityName} />
+          <div className="flex-1 max-w-7xl mx-auto px-4 mt-4 ml-24">
+            <h1 className="text-3xl font-bold">rot/{communityName}</h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              {community.description}
+            </p>
+          </div>
+          <main className="max-w-7xl mx-auto px-4 flex gap-6">
+            <div className="flex-1">
+              <EventFeed communityName={communityName} />
+              <PostFeed communityName={communityName} />
+            </div>
+          </main>
         </div>
-        <aside>
+        <aside className="mr-5 mt-5">
           <SideBar activeCommunity={community} />
         </aside>
-      </main>
+      </div>
     </div>
   );
 }

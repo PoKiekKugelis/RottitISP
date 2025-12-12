@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import { existsSync } from "fs";
 import { mkdir } from "fs/promises";
+import { requireModerator } from "@/lib/auth";
 export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
@@ -11,6 +12,8 @@ export async function POST(request: NextRequest) {
     const file = formData.get("file") as File;
     const type = formData.get("type") as string;
     const communityId = formData.get("communityId") as string;
+    const session = requireModerator(parseInt(communityId))
+    if (session instanceof Response) return session
 
     if (!file || !type || !communityId) {
       return NextResponse.json(

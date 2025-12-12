@@ -1,7 +1,9 @@
 import { getCurrentUser } from "@/lib/auth";
 import { UserRepository } from "@/repositories/user.repository";
-import { error } from "console";
 import { signIn, signOut } from "next-auth/react";
+import { countryToAlpha2 } from "country-to-iso";
+import { User } from "@/models/user/entities/user.entity";
+import ISO6391 from "iso-639-1";
 
 export class UserService {
   static async login(loginName: string, password: string) {
@@ -54,10 +56,17 @@ export class UserService {
     return await UserRepository.update(user.id, data);
   }
 
-  static async addBadge() {
-    //TODO
+  static async getCountryCode(userId: number) {
+    const user = await UserRepository.findOne(userId) as User
+    const res = await fetch(`https://restcountries.com/v3.1/alpha/${countryToAlpha2(user.country)}`);
+    const data = await res.json();
+    const languages3 = data[0].languages || null;
+    if (languages3) {
+      const first3 = Object.values(languages3)[0] as string;
+      return ISO6391.getCode(first3);
+    }
+    return "en"
+
   }
-  static async addKarma() {
-    //TODO
-  }
+
 }
