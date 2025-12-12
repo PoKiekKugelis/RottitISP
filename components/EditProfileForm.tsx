@@ -222,7 +222,7 @@ export default function EditProfileForm({
                             </form>
                             <br></br>
                             <div className="flex gap-2">
-                                <Link href={`/profiles/${user.id}/changePassword`}><Button>Change password</Button></Link>
+                                <Link href={`/profiles/${user.id}/changePassword.tsx`}><Button>Change password</Button></Link>
                                 <Link href={`/profiles/${user.id}`}><Button>Cancel</Button></Link>
                             </div>
                         </div>
