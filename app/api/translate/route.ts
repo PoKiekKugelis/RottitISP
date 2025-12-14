@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     const session = await requireAuth()
     if (session instanceof Response) return session
     const body = await req.json();
-    const target = UserService.getCountryCode(parseInt(session.user.id))
+    const target = await UserService.getCountryCode(parseInt(session.user.id))
 
     const response = await fetch("http://129.151.213.227:5000/translate", {
       method: "POST",
