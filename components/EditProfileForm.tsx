@@ -30,6 +30,7 @@ export default function EditProfileForm({
     const [error, setError] = useState("");
 
     const imageSrc = user.avatar;
+    const defaultImage = "https://github.com/shadcn.png";
     const imageAlt = "@shadcn";
     const imageFallBack = "CN";
 
@@ -138,7 +139,7 @@ export default function EditProfileForm({
                     <CardHeader>
                         <div className="flex flex-row items-left justify-left w-1/2 gap-x-5">
                             <CardTitle className="text-2xl">{currentUsername}</CardTitle>
-                            <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} />
+                            <AvatarImg src={imageSrc || defaultImage} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} />
                         </div>
                     </CardHeader>
                     {error && (

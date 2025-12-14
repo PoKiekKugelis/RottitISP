@@ -33,6 +33,7 @@ export default async function ProfilePage({ params }: {
   const currentUser = await getCurrentUser();
 
   const imageSrc = user.avatar;
+  const defaultImage = "https://github.com/shadcn.png";
   const imageAlt = "@shadcn";
   const imageFallBack = "CN";
 
@@ -61,7 +62,7 @@ export default async function ProfilePage({ params }: {
           <CardHeader>
             <div className="flex flex-row items-left justify-left w-1/2 gap-x-5">
               <CardTitle className="text-2xl">{user.username}</CardTitle>
-              <AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} />
+              <AvatarImg src={imageSrc || defaultImage} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} />
             </div>
             <CardDescription>
               <div className="flex gap-2 items-left justify-left">

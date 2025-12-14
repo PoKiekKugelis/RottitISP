@@ -26,7 +26,7 @@ model User {
   loginName            String             @unique @db.VarChar(30)
   email                String             @unique @db.VarChar(50)
   password             String             @db.VarChar(60)
-  avatar               String             @db.VarChar(255) @default("")
+  avatar               String?            @db.VarChar(255)
   country              String             @db.VarChar(50)
   createdAt            DateTime           @db.Date @default(now())
   username             String             @unique @db.VarChar(30)

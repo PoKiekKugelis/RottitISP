@@ -8,7 +8,7 @@ import { getCurrentUser } from "@/lib/auth"
 export default async function Header() {
 
   const currentUser = await getCurrentUser();
-  const imageSrcIfNull = "https://github.com/shadcn.png";
+  const defaultImage = "https://github.com/shadcn.png";
   const imageAlt = "@shadcn";
   const imageFallBack = "CN";
 
@@ -35,8 +35,8 @@ export default async function Header() {
             <Link href="/register">Sign Up</Link>
           </Button>
           { currentUser == null ?
-            <AvatarImg src={imageSrcIfNull} alt={imageAlt} fallBack={imageFallBack} size={"size-9"}/> :
-            <Link href={`/profiles/${currentUser?.id}`} ><AvatarImg src={currentUser.avatar} alt={imageAlt} fallBack={imageFallBack} size={"size-9"}/></Link>
+            <AvatarImg src={defaultImage} alt={imageAlt} fallBack={imageFallBack} size={"size-9"}/> :
+            <Link href={`/profiles/${currentUser?.id}`} ><AvatarImg src={currentUser.avatar || defaultImage} alt={imageAlt} fallBack={imageFallBack} size={"size-9"}/></Link>
           }
         </div>
       </div>

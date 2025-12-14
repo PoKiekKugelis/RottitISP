@@ -42,6 +42,7 @@ export default function ViewEventPage({
 
     const router = useRouter();
     const imageSrc = creator.avatar;
+    const defaultImage = "https://github.com/shadcn.png";
     const imageAlt = "@shadcn";
     const imageFallBack = "CN";
     const [showMap, setShowMap] = useState(false);
@@ -102,7 +103,7 @@ export default function ViewEventPage({
                 return;
             }
 
-            router.push(`/`);
+            router.push(`/rot/${community.name}`);
 
         } catch (error: any) {
             console.error(error);
@@ -113,7 +114,7 @@ export default function ViewEventPage({
         <Card>
             <CardHeader>
                 <div className="flex flex-row items-left justify-left w-1/2 gap-x-2">
-                    <Link href={`/profiles/${creator?.id}`} ><AvatarImg src={imageSrc} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} /></Link>
+                    <Link href={`/profiles/${creator?.id}`} ><AvatarImg src={imageSrc || defaultImage} alt={imageAlt} fallBack={imageFallBack} size={"size-9"} /></Link>
                     <CardTitle className="text-md">{creator?.username}</CardTitle>
                     <Link href={`/rot/${community.name}`}>
                         <Badge variant="outline" className="text-xs mb-1 hover:bg-background cursor-pointer">

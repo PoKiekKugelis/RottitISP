@@ -12,7 +12,7 @@ export const CreateUser = z.object({
 export const UpdateUser = z.object({
   loginName: z.string().max(30).regex(/^[a-zA-Z0-9_-]+$/).trim().optional(),
   username: z.string().max(30).regex(/^[a-zA-Z0-9_-]+$/).trim().optional(),
-  avatar: z.string().max(255).optional(),
+  avatar: z.string().max(255).optional().nullable(),
   country: z.string().max(50).regex(/^[a-zA-Z ]+$/).trim().optional(),
   birthdate: z.iso.datetime().optional(),
   bio: z.string().max(255).optional(),
