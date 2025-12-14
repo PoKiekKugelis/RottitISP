@@ -69,8 +69,8 @@ export default function CreateCommunityForm({ allTags }: CreateCommunityProps) {
       const data = {
         name,
         description,
-        avatar: "",
-        header: "",
+        avatar: null,
+        header: null,
         ageRestriction,
       };
       const response = await fetch('/api/communities', {

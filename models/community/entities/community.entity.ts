@@ -12,8 +12,8 @@ export interface Community {
   name: string ;
   description: string ;
   createdAt: Date ;
-  avatar: string ;
-  header: string ;
+  avatar?: string ;
+  header?: string ;
   ageRestriction: boolean ;
   creator?: User ;
   creatorId: number ;

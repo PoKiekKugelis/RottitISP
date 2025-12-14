@@ -72,8 +72,8 @@ model Community {
   name            String            @unique @db.VarChar(50)
   description     String            @db.VarChar(255)
   createdAt       DateTime          @db.Date @default(now())
-  avatar          String            @db.VarChar(255)
-  header          String            @db.VarChar(255)
+  avatar          String?           @db.VarChar(255)
+  header          String?           @db.VarChar(255)
   ageRestriction  Boolean           @db.Boolean @default(false)
   creatorId       Int
   creator         User              @relation(fields: [creatorId], references: [id])
