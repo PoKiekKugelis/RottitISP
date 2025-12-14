@@ -20,7 +20,8 @@ export default function Page({ params }: Props) {
   const post = getClientPostById(idNum);
 
   const [comments, setComments] = useState<any[]>([]);
-  const [newComment, setNewComment] = useState("");
+  const [newComment, setNewComment] = useState(""); // top-level
+  const [replyText, setReplyText] = useState("");   // replies
   const [replyTo, setReplyTo] = useState<number | null>(null);
 
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -68,19 +69,21 @@ export default function Page({ params }: Props) {
   }
 
   async function submitComment(parentId: number | null = null) {
-    if (!newComment.trim()) return;
+    const text = parentId ? replyText : newComment;
+    if (!text.trim()) return;
 
     await fetch("/api/comments", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        content: newComment,
+        content: text,
         postId: idNum,
         parentId
       })
     });
 
     setNewComment("");
+    setReplyText("");
     setReplyTo(null);
     location.reload();
   }
@@ -126,7 +129,14 @@ export default function Page({ params }: Props) {
 
           {/* ACTIONS */}
           <div className="flex gap-3 text-sm mt-2">
-            <button onClick={() => setReplyTo(comment.id)}>Reply</button>
+            <button
+              onClick={() => {
+                setReplyTo(comment.id);
+                setReplyText("");
+              }}
+            >
+              Reply
+            </button>
 
             {/* EDIT — creator only */}
             {currentUser?.id === comment.creator.id && (
@@ -162,8 +172,8 @@ export default function Page({ params }: Props) {
               <textarea
                 className="w-full border p-2"
                 placeholder="Reply..."
-                value={newComment}
-                onChange={e => setNewComment(e.target.value)}
+                value={replyText}
+                onChange={e => setReplyText(e.target.value)}
               />
               <button
                 className="text-sm mt-1"
