@@ -21,7 +21,7 @@ export const seedPosts: Post[] = [
     id: 1,
     title: "Labuka!",
     author: "admin",
-    community: "programming",
+    community: "GamesOrBacon",
     votes: 420,
     comments: 69,
     content:

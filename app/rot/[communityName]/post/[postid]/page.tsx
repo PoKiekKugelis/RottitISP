@@ -30,6 +30,9 @@ export default function Page({ params }: Props) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState("");
 
+  const [error, setError] = useState("");
+  const [translatedText, setTranslatedText] = useState("")
+
   useEffect(() => {
     fetch(`/api/comments?postId=${idNum}`)
       .then(res => res.json())
@@ -100,6 +103,33 @@ export default function Page({ params }: Props) {
     location.reload();
   }
 
+  async function handleTranslate(commentId: number, originalText: string) {
+    const response = await fetch("/api/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: originalText })
+    });
+
+    const result = await response.json();
+
+    if (result?.error) {
+      setError(result.error);
+      return;
+    }
+
+    // Update the flat comments array by matching id (not commentId)
+    setComments(prev =>
+      prev.map(c =>
+        c.id === commentId
+          ? { ...c, translatedContent: result.translatedText }
+          : c
+      )
+    );
+  }
+  useEffect(() => {
+    console.log("Comments changed:", comments);
+  }, [comments]);
+
   function renderComments(list: any[], depth = 0) {
     return list.map(comment => (
       <div key={comment.id} style={{ marginLeft: depth * 20 }}>
@@ -124,7 +154,7 @@ export default function Page({ params }: Props) {
               </div>
             </>
           ) : (
-            <p className="mt-1">{comment.content}</p>
+            <p className="mt-1">{comment.translatedContent ?? comment.content}</p>
           )}
 
           {/* ACTIONS */}
@@ -164,6 +194,14 @@ export default function Page({ params }: Props) {
                 Delete
               </button>
             )}
+            {/* TRANSLATE — authenticated user only */}
+            <button
+              onClick={() => {
+                handleTranslate(comment.id, comment.content)
+              }}
+            >
+              Translate
+            </button>
           </div>
 
           {/* REPLY */}
