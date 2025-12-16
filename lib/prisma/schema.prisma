@@ -154,17 +154,21 @@ model Post {
 }
 
 model Comment {
-  id             Int         @id @default(autoincrement())
-  content        String      @db.VarChar(255)
-  createdAt      DateTime    @db.Date @default(now())
-  editStatus     Boolean     @db.Boolean @default(false)
-  postId         Int
-  post           Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
-  creatorId      Int
-  creator        User        @relation(fields: [creatorId], references: [id])
-  parentId       Int?
-  parent         Comment?     @relation("CommentToComment", fields: [parentId], references: [id])
-  replies        Comment[]    @relation("CommentToComment")
+  id         Int       @id @default(autoincrement())
+  content    String    @db.VarChar(255)
+  createdAt  DateTime  @default(now())
+  editStatus Boolean   @default(false)
+
+  postId Int
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  creatorId Int
+  creator   User @relation(fields: [creatorId], references: [id])
+
+  parentId Int?
+  parent   Comment? @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
+
+  replies Comment[] @relation("CommentToComment")
 }
 
 
