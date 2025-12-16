@@ -8,8 +8,8 @@ export class CommunityService {
   static async register(data: {
     name: string,
     description: string,
-    avatar: string,
-    header: string,
+    avatar: string | null,
+    header: string | null,
     ageRestriction: boolean,
     creatorId: number
   }) {
