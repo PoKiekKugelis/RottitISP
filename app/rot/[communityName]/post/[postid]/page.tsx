@@ -20,8 +20,8 @@ export default function Page({ params }: Props) {
   const post = getClientPostById(idNum);
 
   const [comments, setComments] = useState<any[]>([]);
-  const [newComment, setNewComment] = useState(""); // top-level
-  const [replyText, setReplyText] = useState("");   // replies
+  const [newComment, setNewComment] = useState("");
+  const [replyText, setReplyText] = useState("");
   const [replyTo, setReplyTo] = useState<number | null>(null);
 
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -30,8 +30,9 @@ export default function Page({ params }: Props) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState("");
 
-  const [error, setError] = useState("");
-  const [translatedText, setTranslatedText] = useState(false)
+  const [commentError, setCommentError] = useState("");
+  const [replyError, setReplyError] = useState("");
+  const [editError, setEditError] = useState("");
 
   useEffect(() => {
     fetch(`/api/comments?postId=${idNum}`)
@@ -50,9 +51,7 @@ export default function Page({ params }: Props) {
   if (!post) {
     return (
       <main className="min-h-screen flex items-center justify-center p-6">
-        <div className="text-center">
-          <h1 className="text-2xl font-semibold">Post not found</h1>
-        </div>
+        <h1 className="text-2xl font-semibold">Post not found</h1>
       </main>
     );
   }
@@ -73,18 +72,29 @@ export default function Page({ params }: Props) {
 
   async function submitComment(parentId: number | null = null) {
     const text = parentId ? replyText : newComment;
-    if (!text.trim()) return;
 
-    await fetch("/api/comments", {
+    if (!text.trim()) {
+      parentId
+        ? setReplyError("Reply cannot be empty.")
+        : setCommentError("Comment cannot be empty.");
+      return;
+    }
+
+    const res = await fetch("/api/comments", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        content: text,
-        postId: idNum,
-        parentId
-      })
+      body: JSON.stringify({ content: text, postId: idNum, parentId })
     });
 
+    if (!res.ok) {
+      parentId
+        ? setReplyError("Failed to post reply.")
+        : setCommentError("Failed to post comment.");
+      return;
+    }
+
+    setCommentError("");
+    setReplyError("");
     setNewComment("");
     setReplyText("");
     setReplyTo(null);
@@ -92,109 +102,81 @@ export default function Page({ params }: Props) {
   }
 
   async function saveEdit(commentId: number) {
-    await fetch(`/api/comments/${commentId}`, {
+    if (!editingText.trim()) {
+      setEditError("Edited comment cannot be empty.");
+      return;
+    }
+
+    const res = await fetch(`/api/comments/${commentId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content: editingText })
     });
 
+    if (!res.ok) {
+      setEditError("Failed to update comment.");
+      return;
+    }
+
+    setEditError("");
     setEditingId(null);
     setEditingText("");
     location.reload();
   }
-
-  async function handleTranslate(commentId: number, originalText: string) {
-    const comment = comments.find(c => c.id === commentId);
-    if (comment?.isTranslated != undefined) {
-      setComments(prev =>
-        prev.map(c =>
-          c.id === commentId
-            ? { ...c, isTranslated: !c.isTranslated }
-            : c
-        )
-      );
-      return;
-    }
-    if (comment.isTranslated == undefined) {
-      const response = await fetch("/api/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: originalText })
-      });
-
-      const result = await response.json();
-
-      if (result?.error) {
-        setError(result.error);
-        return;
-      }
-
-      setComments(prev =>
-        prev.map(c =>
-          c.id === commentId
-            ? { ...c, translatedContent: result.translatedText, isTranslated: true }
-            : c
-        )
-      );
-    }
-  }
-  useEffect(() => {
-    console.log("Comments changed:", comments);
-  }, [comments]);
 
   function renderComments(list: any[], depth = 0) {
     return list.map(comment => (
       <div key={comment.id} style={{ marginLeft: depth * 20 }}>
         <div className="border p-3 rounded-md mt-3">
           <div className="text-sm text-muted-foreground">
-            u/{comment.creator.username} •{" "}
-            {comment.createdAt.slice(0, 10)}
+            u/{comment.creator.username} • {comment.createdAt.slice(0, 10)}
             {comment.editStatus && " • (edited)"}
           </div>
 
-          {/* CONTENT / EDIT MODE */}
           {editingId === comment.id ? (
             <>
+              {editError && (
+                <p className="text-sm text-red-600 mt-1">{editError}</p>
+              )}
               <textarea
                 className="w-full border p-2 mt-2"
                 value={editingText}
                 onChange={e => setEditingText(e.target.value)}
               />
-              <div className="flex gap-2 mt-2 text-sm">
-                <button className="cursor-pointer hover:underline" onClick={() => saveEdit(comment.id)}>Save</button>
-                <button className="cursor-pointer hover:underline" onClick={() => setEditingId(null)}>Cancel</button>
+              <div className="flex gap-3 mt-2 text-sm">
+                <button onClick={() => saveEdit(comment.id)}>Save</button>
+                <button onClick={() => setEditingId(null)}>Cancel</button>
               </div>
             </>
           ) : (
-            <p className="mt-1">{comment.isTranslated ? comment.translatedContent : comment.content}</p>
+            <p className="mt-1">{comment.content}</p>
           )}
 
-          {/* ACTIONS */}
           <div className="flex gap-3 text-sm mt-2">
-            <button className="cursor-pointer hover:underline"
+            <button
               onClick={() => {
                 setReplyTo(comment.id);
                 setReplyText("");
+                setReplyError("");
               }}
             >
               Reply
             </button>
 
-            {/* EDIT — creator only */}
             {currentUser?.id === comment.creator.id && (
-              <button className="cursor-pointer hover:underline"
+              <button
                 onClick={() => {
                   setEditingId(comment.id);
                   setEditingText(comment.content);
+                  setEditError("");
                 }}
               >
                 Edit
               </button>
             )}
 
-            {/* DELETE — moderator only */}
             {isModerator && (
-              <button className="cursor-pointer hover:underline"
+              <button
                 onClick={async () => {
                   if (!confirm("Delete this comment?")) return;
                   await fetch(`/api/comments/${comment.id}`, {
@@ -206,19 +188,13 @@ export default function Page({ params }: Props) {
                 Delete
               </button>
             )}
-            {/* TRANSLATE — authenticated user only */}
-            <button className="cursor-pointer hover:underline"
-              onClick={async () => {
-                await handleTranslate(comment.id, comment.content)
-              }}
-            >
-              Translate
-            </button>
           </div>
 
-          {/* REPLY */}
           {replyTo === comment.id && (
             <div className="mt-2">
+              {replyError && (
+                <p className="text-sm text-red-600 mb-1">{replyError}</p>
+              )}
               <textarea
                 className="w-full border p-2"
                 placeholder="Reply..."
@@ -226,7 +202,7 @@ export default function Page({ params }: Props) {
                 onChange={e => setReplyText(e.target.value)}
               />
               <button
-                className="text-sm mt-1 cursor-pointer"
+                className="text-sm mt-1"
                 onClick={() => submitComment(comment.id)}
               >
                 Post reply
@@ -243,22 +219,15 @@ export default function Page({ params }: Props) {
   return (
     <main className="min-h-screen flex items-start justify-center p-6">
       <div className="max-w-3xl w-full">
+
         {/* POST — unchanged */}
         <div className="mb-4 flex items-center justify-between gap-4">
-          <a
-            href={`/rot/${post.community}`}
-            className="text-sm text-primary/90 hover:underline"
-          >
+          <a href={`/rot/${post.community}`} className="text-sm hover:underline">
             rot/{post.community}
           </a>
           <div className="flex gap-2">
-            <Link
-              href={`/rot/${communityName}/post/${post.id}/edit`}
-              className="text-sm"
-            >
-              <button className="px-3 py-1 border rounded-md">
-                Edit Post
-              </button>
+            <Link href={`/rot/${communityName}/post/${post.id}/edit`}>
+              <button className="px-3 py-1 border rounded-md">Edit Post</button>
             </Link>
             <button
               onClick={handleRemove}
@@ -277,9 +246,12 @@ export default function Page({ params }: Props) {
           {post.content}
         </article>
 
-        {/* COMMENTS */}
         <hr className="my-8" />
         <h2 className="text-xl font-semibold mb-3">Comments</h2>
+
+        {commentError && (
+          <p className="text-sm text-red-600 mb-2">{commentError}</p>
+        )}
 
         <textarea
           className="w-full border p-2"
