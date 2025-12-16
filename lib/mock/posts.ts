@@ -31,51 +31,21 @@ export const seedPosts: Post[] = [
     id: 2,
     title: "Labuka!",
     author: "admin",
-    community: "itsjoever",
+    community: "BaconOrGames",
     votes: 420,
-    comments: 69,
+    comments: 21,
     content:
-      "lolol😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉",
+      "Unlimited bacon but no games? Or... GAMES, unlimited games but no games?",
   },
   {
     id: 3,
-    title: "Labuka!",
-    author: "admin",
-    community: "gaming",
+    title: "User community post",
+    author: "user",
+    community: "userCommunity",
     votes: 420,
-    comments: 69,
+    comments: 67,
     content:
-      "😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉",
-  },
-  {
-    id: 4,
-    title: "Labuka!",
-    author: "admin",
-    community: "cooking",
-    votes: 420,
-    comments: 69,
-    content:
-      "😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉",
-  },
-  {
-    id: 5,
-    title: "Labuka!",
-    author: "admin",
-    community: "fitness",
-    votes: 420,
-    comments: 69,
-    content:
-      "😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉",
-  },
-  {
-    id: 6,
-    title: "Labuka!",
-    author: "admin",
-    community: "itsjoever",
-    votes: 420,
-    comments: 69,
-    content:
-      "😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉😉",
+      "Hmmmm, testing testing testing testing testing testing testing",
   },
 ]
 
