@@ -75,7 +75,7 @@ export function CommunityMemberButton({
               Cancel
             </Button>
             <Button className="cursor-pointer" variant="default" onClick={handleSubmit} disabled={loading}>
-              yes
+              Yes
             </Button>
           </DialogFooter>
         </DialogContent>

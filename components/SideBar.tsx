@@ -11,7 +11,7 @@ export default async function SideBar({ activeCommunity }: SideBarProps) {
   const session = await getSession()
   let communityRole = "RANDOM"
 
-  const communities = CommunityRepository.findByMembers(5);
+  const communities = CommunityRepository.findByMembers(100);
   if (session && activeCommunity) {
     communityRole = await isModerator(parseInt(session.user.id), activeCommunity?.id) ? "MODERATOR" :
       await CommunityRepository.isMember(parseInt(session.user.id), activeCommunity?.id) ? "MEMBER" : "RANDOM"

@@ -5,6 +5,7 @@ import SideBar from "@/components/SideBar";
 import { CommunityRepository } from "@/repositories/community.repository";
 import AvatarImg from "@/components/Avatar";
 import HeaderImg from "@/components/CommunityHeader";
+import { Tag } from "@/models/tag/entities/tag.entity";
 
 export default async function CommunityPage({ params }: {
   params: Promise<{ communityName: string }>
@@ -38,6 +39,23 @@ export default async function CommunityPage({ params }: {
         <div className="flex-1">
           <div className="flex-1 max-w-7xl mx-auto px-4 mt-4 ml-24">
             <h1 className="text-3xl font-bold">rot/{communityName}</h1>
+            <span>•</span>
+            <span>
+              Created {new Date(community.createdAt).toLocaleDateString()}
+            </span>
+            {community.tags?.length > 0 && (
+              <>
+                <span>•</span>
+                {community.tags.map((ct) => (
+                  <span
+                    key={ct.tag.id}
+                    className="rounded-full bg-muted px-2 py-0.5 text-xs"
+                  >
+                    #{ct.tag.name}
+                  </span>
+                ))}
+              </>
+            )}
             <p className="text-muted-foreground text-sm mt-1">
               {community.description}
             </p>

@@ -10,8 +10,9 @@ export async function PUT(
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const { id } = await params
 
-  const commentId = Number(params.id);
+  const commentId = Number(id);
   const { content } = await req.json();
 
   const comment = await prisma.comment.findUnique({
@@ -42,7 +43,10 @@ export async function DELETE(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const commentId = Number(params.id);
+  const { id } = await params
+
+
+  const commentId = Number(id);
 
   const isModerator = await prisma.moderator.findFirst({
     where: { userId: user.id }
