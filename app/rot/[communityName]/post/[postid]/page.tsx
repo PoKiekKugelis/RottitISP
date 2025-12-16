@@ -31,7 +31,7 @@ export default function Page({ params }: Props) {
   const [editingText, setEditingText] = useState("");
 
   const [error, setError] = useState("");
-  const [translatedText, setTranslatedText] = useState("")
+  const [translatedText, setTranslatedText] = useState(false)
 
   useEffect(() => {
     fetch(`/api/comments?postId=${idNum}`)
@@ -104,27 +104,39 @@ export default function Page({ params }: Props) {
   }
 
   async function handleTranslate(commentId: number, originalText: string) {
-    const response = await fetch("/api/translate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: originalText })
-    });
-
-    const result = await response.json();
-
-    if (result?.error) {
-      setError(result.error);
+    const comment = comments.find(c => c.id === commentId);
+    if (comment?.isTranslated != undefined) {
+      setComments(prev =>
+        prev.map(c =>
+          c.id === commentId
+            ? { ...c, isTranslated: !c.isTranslated }
+            : c
+        )
+      );
       return;
     }
+    if (comment.isTranslated == undefined) {
+      const response = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: originalText })
+      });
 
-    // Update the flat comments array by matching id (not commentId)
-    setComments(prev =>
-      prev.map(c =>
-        c.id === commentId
-          ? { ...c, translatedContent: result.translatedText }
-          : c
-      )
-    );
+      const result = await response.json();
+
+      if (result?.error) {
+        setError(result.error);
+        return;
+      }
+
+      setComments(prev =>
+        prev.map(c =>
+          c.id === commentId
+            ? { ...c, translatedContent: result.translatedText, isTranslated: true }
+            : c
+        )
+      );
+    }
   }
   useEffect(() => {
     console.log("Comments changed:", comments);
@@ -149,17 +161,17 @@ export default function Page({ params }: Props) {
                 onChange={e => setEditingText(e.target.value)}
               />
               <div className="flex gap-2 mt-2 text-sm">
-                <button onClick={() => saveEdit(comment.id)}>Save</button>
-                <button onClick={() => setEditingId(null)}>Cancel</button>
+                <button className="cursor-pointer hover:underline" onClick={() => saveEdit(comment.id)}>Save</button>
+                <button className="cursor-pointer hover:underline" onClick={() => setEditingId(null)}>Cancel</button>
               </div>
             </>
           ) : (
-            <p className="mt-1">{comment.translatedContent ?? comment.content}</p>
+            <p className="mt-1">{comment.isTranslated ? comment.translatedContent : comment.content}</p>
           )}
 
           {/* ACTIONS */}
           <div className="flex gap-3 text-sm mt-2">
-            <button
+            <button className="cursor-pointer hover:underline"
               onClick={() => {
                 setReplyTo(comment.id);
                 setReplyText("");
@@ -170,7 +182,7 @@ export default function Page({ params }: Props) {
 
             {/* EDIT — creator only */}
             {currentUser?.id === comment.creator.id && (
-              <button
+              <button className="cursor-pointer hover:underline"
                 onClick={() => {
                   setEditingId(comment.id);
                   setEditingText(comment.content);
@@ -182,7 +194,7 @@ export default function Page({ params }: Props) {
 
             {/* DELETE — moderator only */}
             {isModerator && (
-              <button
+              <button className="cursor-pointer hover:underline"
                 onClick={async () => {
                   if (!confirm("Delete this comment?")) return;
                   await fetch(`/api/comments/${comment.id}`, {
@@ -195,9 +207,9 @@ export default function Page({ params }: Props) {
               </button>
             )}
             {/* TRANSLATE — authenticated user only */}
-            <button
-              onClick={() => {
-                handleTranslate(comment.id, comment.content)
+            <button className="cursor-pointer hover:underline"
+              onClick={async () => {
+                await handleTranslate(comment.id, comment.content)
               }}
             >
               Translate
@@ -214,7 +226,7 @@ export default function Page({ params }: Props) {
                 onChange={e => setReplyText(e.target.value)}
               />
               <button
-                className="text-sm mt-1"
+                className="text-sm mt-1 cursor-pointer"
                 onClick={() => submitComment(comment.id)}
               >
                 Post reply

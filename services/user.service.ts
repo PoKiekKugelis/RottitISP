@@ -65,7 +65,7 @@ export class UserService {
       const first3 = Object.values(languages3)[0] as string;
       return ISO6391.getCode(first3);
     }
-    return "en"
+    return "zh"
 
   }
 
