@@ -5,7 +5,7 @@ import { EventRepository } from "@/repositories/event.repository";
 import { UserRepository } from "@/repositories/user.repository";
 import { CommunityRepository } from "@/repositories/community.repository";
 import ViewEvent from "@/components/ViewEvent";
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUser, isAdmin } from "@/lib/auth"
 import Link from "next/link";
 
 export default async function EventPage({ params }: {

@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import AvatarImg from "@/components/Avatar";
 import { User } from "@/models/user/entities/user.entity"
 import { useRouter } from "next/navigation";
+import { countries } from "countries-list";
 
 interface EditProfileProps {
     user: User;
@@ -28,6 +29,7 @@ export default function EditProfileForm({
     const [bio, setBio] = useState(user.bio);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const countryList = Object.values(countries).map(c => c.name);
 
     const imageSrc = user.avatar;
     const defaultImage = "https://github.com/shadcn.png";
@@ -180,6 +182,7 @@ export default function EditProfileForm({
                                     />
                                 </div>
 
+                                {/* 
                                 <div className="space-y-2">
                                     <div>
                                         <Label htmlFor="country">Country</Label>
@@ -191,6 +194,23 @@ export default function EditProfileForm({
                                         value={country}
                                         onChange={(e) => setCountry(e.target.value)}
                                     />
+                                </div>
+                                */}
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="country">Country</Label>
+                                    <select
+                                        name="country"
+                                        value={country}
+                                        onChange={(e) => setCountry(e.target.value)}
+                                        className="border rounded p-2 w-full"
+                                        required
+                                    >
+                                        <option value="">Select country</option>
+                                        {countryList.map((c) => (
+                                            <option key={c} value={c}>{c}</option>
+                                        ))}
+                                    </select>
                                 </div>
 
                                 <div className="space-y-2">
