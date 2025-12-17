@@ -34,6 +34,9 @@ export default function Page({ params }: Props) {
   const [replyError, setReplyError] = useState("");
   const [editError, setEditError] = useState("");
 
+  const [error, setError] = useState("");
+  const [translatedText, setTranslatedText] = useState(false)
+
   useEffect(() => {
     fetch(`/api/comments?postId=${idNum}`)
       .then(res => res.json())
@@ -124,6 +127,47 @@ export default function Page({ params }: Props) {
     location.reload();
   }
 
+  async function handleTranslate(commentId: number, originalText: string) {
+    const comment = comments.find(c => c.id === commentId);
+
+    if (comment?.isTranslated != undefined) {
+      setComments(prev =>
+        prev.map(c =>
+          c.id === commentId
+            ? { ...c, isTranslated: !c.isTranslated }
+            : c
+        )
+      );
+      return;
+    }
+    if (comment.isTranslated == undefined) {
+      const response = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: originalText })
+      });
+
+      const result = await response.json();
+
+      if (result?.error) {
+        setError(result.error);
+        return;
+      }
+
+      setComments(prev =>
+        prev.map(c =>
+          c.id === commentId
+            ? { ...c, translatedContent: result.translatedText, isTranslated: true }
+            : c
+        )
+      );
+    }
+  }
+  useEffect(() => {
+    console.log("Comments changed:", comments);
+  }, [comments]);
+
+
   function renderComments(list: any[], depth = 0) {
     return list.map(comment => (
       <div key={comment.id} style={{ marginLeft: depth * 20 }}>
@@ -144,16 +188,16 @@ export default function Page({ params }: Props) {
                 onChange={e => setEditingText(e.target.value)}
               />
               <div className="flex gap-3 mt-2 text-sm">
-                <button onClick={() => saveEdit(comment.id)}>Save</button>
-                <button onClick={() => setEditingId(null)}>Cancel</button>
+                <button className="cursor-pointer hover:underline" onClick={() => saveEdit(comment.id)}>Save</button>
+                <button className="cursor-pointer hover:underline" onClick={() => setEditingId(null)}>Cancel</button>
               </div>
             </>
           ) : (
-            <p className="mt-1">{comment.content}</p>
+            <p className="mt-1">{comment.isTranslated ? comment.translatedContent : comment.content}</p>
           )}
 
           <div className="flex gap-3 text-sm mt-2">
-            <button
+            <button className="cursor-pointer hover:underline"
               onClick={() => {
                 setReplyTo(comment.id);
                 setReplyText("");
@@ -164,7 +208,7 @@ export default function Page({ params }: Props) {
             </button>
 
             {currentUser?.id === comment.creator.id && (
-              <button
+              <button className="cursor-pointer hover:underline"
                 onClick={() => {
                   setEditingId(comment.id);
                   setEditingText(comment.content);
@@ -176,7 +220,7 @@ export default function Page({ params }: Props) {
             )}
 
             {isModerator && (
-              <button
+              <button className="cursor-pointer hover:underline"
                 onClick={async () => {
                   if (!confirm("Delete this comment?")) return;
                   await fetch(`/api/comments/${comment.id}`, {
@@ -188,6 +232,15 @@ export default function Page({ params }: Props) {
                 Delete
               </button>
             )}
+
+            {/* TRANSLATE — authenticated user only */}
+            <button className="cursor-pointer hover:underline"
+              onClick={async () => {
+                await handleTranslate(comment.id, comment.content)
+              }}
+            >
+              Translate
+            </button>
           </div>
 
           {replyTo === comment.id && (
@@ -202,7 +255,7 @@ export default function Page({ params }: Props) {
                 onChange={e => setReplyText(e.target.value)}
               />
               <button
-                className="text-sm mt-1"
+                className="text-sm mt-1 cursor-pointer"
                 onClick={() => submitComment(comment.id)}
               >
                 Post reply
@@ -260,7 +313,7 @@ export default function Page({ params }: Props) {
           onChange={e => setNewComment(e.target.value)}
         />
         <button
-          className="mt-2 px-3 py-1 border rounded-md"
+          className="mt-2 px-3 py-1 border rounded-md cursor-pointer"
           onClick={() => submitComment(null)}
         >
           Post comment
